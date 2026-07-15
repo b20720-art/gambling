@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도파민 왕국: 확률의 군주 (Dopamine Kingdom)</title>
+    <title>도파민 왕국: 확률의 군주 (Royal Palace Edition)</title>
     <style>
-        /* 화려하고 엄숙한 왕궁의 알현실 비주얼 테마 */
+        /* 전통적인 중세 궁전 테마의 스타일링 */
         body {
             margin: 0;
             padding: 0;
@@ -20,857 +20,491 @@
             min-height: 100vh;
         }
 
-        .palace-window {
-            width: 95%;
-            max-width: 750px;
-            background: rgba(28, 20, 14, 0.98);
+        .palace-container {
+            width: 90%;
+            max-width: 700px;
+            background: rgba(26, 18, 11, 0.95);
             border: 4px double #d4af37;
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 30px;
-            box-shadow: 0 0 35px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
             margin: 20px 0;
-            box-sizing: border-box;
         }
 
-        /* 로그인 스크린 */
-        #login-screen {
+        .throne-room-header {
             text-align: center;
-            padding: 40px 20px;
-        }
-
-        .crown-emblem {
-            font-size: 4.5rem;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 15px;
             margin-bottom: 20px;
-            text-shadow: 0 0 20px #d4af37;
         }
 
-        /* 메인 게임 레이아웃 */
-        #game-screen {
-            display: none;
-        }
-
-        .throne-title {
-            text-align: center;
+        .throne-room-header h1 {
+            margin: 0;
             font-size: 2.2rem;
             color: #d4af37;
-            margin-top: 0;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.9);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
 
-        .day-counter {
-            text-align: center;
-            font-size: 1.2rem;
-            color: #ffffff;
-            background: rgba(212, 175, 55, 0.2);
-            padding: 5px 15px;
-            border-radius: 20px;
-            width: fit-content;
-            margin: 0 auto 20px auto;
-            border: 1px solid #d4af37;
-        }
-
-        /* 5대 왕실 핵심 스탯 그리드 */
-        .royal-stats-container {
+        .royal-status-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            background: rgba(46, 34, 24, 0.85);
-            border: 2px solid #d4af37;
-            padding: 12px;
-            border-radius: 6px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            background: rgba(44, 34, 24, 0.8);
+            border: 1px solid #d4af37;
+            padding: 15px;
+            border-radius: 5px;
             margin-bottom: 25px;
         }
 
-        @media (max-width: 600px) {
-            .royal-stats-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .stat-card {
+        .status-box {
             text-align: center;
-            background: rgba(20, 14, 10, 0.7);
-            border: 1px solid #6b5328;
-            padding: 8px 4px;
-            border-radius: 4px;
         }
 
-        .stat-card.health-card {
-            border-color: #e43f5a;
-            background: rgba(228, 63, 90, 0.1);
+        .status-title {
+            font-size: 0.85rem;
+            color: #a89f78;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
         }
 
-        .stat-label {
-            font-size: 0.8rem;
-            color: #bfae8a;
-            margin-bottom: 4px;
-        }
-
-        .stat-val {
-            font-size: 1.15rem;
+        .status-num {
+            font-size: 1.4rem;
             font-weight: bold;
             color: #ffffff;
+            text-shadow: 1px 1px 2px #000;
         }
 
-        /* 타임라인 진행 인디케이터 */
-        .timeline-indicator {
+        /* 내비게이션 왕실 탭 */
+        .royal-menu {
             display: flex;
             justify-content: space-between;
-            background: #231911;
-            padding: 10px;
-            border-radius: 4px;
+            gap: 8px;
             margin-bottom: 25px;
-            font-size: 0.75rem;
-            border: 1px solid #423321;
-            overflow-x: auto;
-            white-space: nowrap;
-            gap: 5px;
         }
 
-        .timeline-step {
-            color: #7c6f5a;
-            padding: 4px 8px;
+        .menu-tab {
+            flex: 1;
+            padding: 12px 5px;
+            background: #4a3b2c;
+            border: 1px solid #d4af37;
+            color: #e0d8b4;
+            font-weight: bold;
+            cursor: pointer;
             border-radius: 3px;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.9rem;
         }
 
-        .timeline-step.current {
+        .menu-tab.active-tab {
             background: #d4af37;
             color: #1a120b;
-            font-weight: bold;
+            box-shadow: 0 0 10px #d4af37;
         }
 
-        /* 서브 루프 스테이지 패널 */
-        .stage-panel {
-            background: rgba(38, 27, 19, 0.9);
-            border: 1px dashed #d4af37;
+        /* 서브 스크린 패널 */
+        .screen-panel {
+            display: none;
+            background: rgba(38, 28, 20, 0.6);
+            border: 1px dashed #a89f78;
             padding: 25px;
-            border-radius: 6px;
-            min-height: 280px;
-            box-sizing: border-box;
+            border-radius: 5px;
+            min-height: 300px;
         }
 
-        .stage-header {
+        .screen-panel.visible {
+            display: block;
+        }
+
+        .panel-title {
             color: #d4af37;
-            font-size: 1.4rem;
             margin-top: 0;
-            border-bottom: 1px solid #54412d;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            border-bottom: 1px solid #4a3b2c;
+            padding-bottom: 8px;
+            font-size: 1.3rem;
         }
 
-        /* 버튼 및 폼 인터페이스 */
-        .palace-input {
-            width: 100%;
-            padding: 12px;
-            background: #1c130c;
-            border: 1px solid #8c734b;
-            color: #ffffff;
-            font-size: 1.05rem;
-            border-radius: 4px;
-            box-sizing: border-box;
-            margin-bottom: 15px;
-        }
-
-        .palace-select {
-            width: 100%;
-            padding: 12px;
-            background: #1c130c;
-            border: 1px solid #8c734b;
-            color: #ffffff;
-            font-size: 1.05rem;
-            border-radius: 4px;
-            box-sizing: border-box;
-            margin-bottom: 15px;
-        }
-
-        .palace-btn {
+        /* 인터랙션 버튼 및 인풋 */
+        .royal-btn {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(#d4af37, #b28f24);
+            background: linear-gradient(#d4af37, #aa841c);
             border: 1px solid #846512;
             color: #1a120b;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
+            margin-top: 15px;
             text-shadow: 0 1px 0 rgba(255,255,255,0.3);
-            margin-top: 10px;
         }
 
-        .palace-btn:hover {
+        .royal-btn:hover {
             background: linear-gradient(#e5c158, #c69b2b);
         }
 
-        .palace-btn.action-next {
-            background: linear-gradient(#2ecc71, #27ae60);
-            color: #fff;
-            border-color: #219653;
-            margin-top: 20px;
+        .royal-select, .royal-input {
+            width: 100%;
+            padding: 12px;
+            background: #261c14;
+            border: 1px solid #a89f78;
+            color: #e0d8b4;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            margin-bottom: 15px;
         }
 
-        .palace-btn.action-next:hover {
-            background: linear-gradient(#2efb83, #2ecc71);
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+            color: #c4ba94;
         }
 
-        .palace-btn.danger-shoot {
-            background: linear-gradient(#e43f5a, #b9132c);
-            color: white;
-            border-color: #8c0a1c;
-            font-size: 1.3rem;
-            letter-spacing: 2px;
-        }
-
-        .palace-btn.danger-shoot:hover {
-            background: linear-gradient(#ff526e, #d61c39);
-        }
-
-        /* 결과 출력 로그 창 */
-        .report-box {
+        /* 결과 연출 상자 */
+        .scroll-result {
             margin-top: 20px;
             padding: 15px;
-            background: #1c140d;
+            background: #2c2218;
             border-left: 4px solid #d4af37;
-            border-radius: 3px;
             color: #ffffff;
-            font-size: 0.98rem;
+            font-size: 0.95rem;
             line-height: 1.6;
             white-space: pre-line;
+            border-radius: 2px;
         }
 
-        /* 3택 음식 접시 디자인 */
-        .food-table {
+        /* 아침/점심 식사 전용 푸드 플레이트 */
+        .food-court {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
+            margin: 25px 0;
             gap: 15px;
-            margin: 20px 0;
         }
 
-        .food-plate {
+        .food-dish {
             flex: 1;
-            background: #2b1f15;
-            border: 2px solid #6b5328;
+            background: #3a2e24;
+            border: 2px solid #a89f78;
             padding: 20px 10px;
             text-align: center;
             cursor: pointer;
             border-radius: 8px;
-            transition: all 0.2s ease;
+            transition: transform 0.2s, border-color 0.2s;
         }
 
-        .food-plate:hover {
-            transform: translateY(-5px);
+        .food-dish:hover {
+            transform: scale(1.05);
             border-color: #d4af37;
-            background: #3d2c1e;
+            background: #4a3b2c;
         }
 
-        .food-emoji {
-            font-size: 2.8rem;
-            margin-bottom: 8px;
-        }
-
-        .food-name {
-            font-size: 0.95rem;
-            color: #e0d8b4;
-            font-weight: bold;
+        .food-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
 
-<div class="palace-window">
-
-    <!-- ================= 로그인 화면 ================= -->
-    <div id="login-screen">
-        <div class="crown-emblem">👑</div>
-        <h1 style="color: #d4af37; margin-bottom: 10px;">도파민 왕국 (Dopamine Kingdom)</h1>
-        <p style="color: #a89f78; margin-bottom: 30px;">확률과 도박으로 다스리는 무자비한 왕좌에 오르십시오.</p>
-        
-        <label for="monarch-name" style="display:block; text-align:left; margin-bottom: 8px; color: #e0d8b4;">군주의 휘호를 입력하십시오:</label>
-        <input type="text" id="monarch-name" class="palace-input" placeholder="예: 루이 14세, 세종대왕, 엘리자베스" value="도파민">
-        
-        <button class="palace-btn" onclick="ascendThrone()">왕좌에 등극하기</button>
+<div class="palace-container">
+    <div class="throne-room-header">
+        <h1>👑 왕국의 알현실 (Throne Room)</h1>
     </div>
 
-    <!-- ================= 메인 게임 스크린 ================= -->
-    <div id="game-screen">
-        <h2 class="throne-title" id="display-title">👑 도파민 국왕의 알현실</h2>
-        <div class="day-counter" id="display-day">Day 1</div>
-
-        <!-- 5대 왕실 스탯 표시 창 (국고, 군사력, 민심, 인구, 체력) -->
-        <div class="royal-stats-container">
-            <div class="stat-card">
-                <div class="stat-label">🏛️ 국고</div>
-                <div class="stat-val" id="stat-gold">1,000</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">🛡️ 군사력</div>
-                <div class="stat-val" id="stat-military">150</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">👥 민심</div>
-                <div class="stat-val" id="stat-loyalty">60%</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">🌾 인구</div>
-                <div class="stat-val" id="stat-population">500</div>
-            </div>
-            <div class="stat-card health-card">
-                <div class="stat-label" style="color:#ff526e;">❤️ 체력</div>
-                <div class="stat-val" id="stat-health" style="color:#ff526e;">100</div>
-            </div>
+    <!-- 스탯 바 -->
+    <div class="royal-status-grid">
+        <div class="status-box">
+            <div class="status-title">🏛️ 국정 보유고</div>
+            <div class="status-num" id="regal-gold">1,000 Gold</div>
         </div>
-
-        <!-- 8단계 루프 진행상황 인디케이터 -->
-        <div class="timeline-indicator" id="timeline-bar">
-            <span class="timeline-step" id="tl-1">1. 기상(총)</span>
-            <span class="timeline-step" id="tl-2">2. 아침식사</span>
-            <span class="timeline-step" id="tl-3">3. 오전업무</span>
-            <span class="timeline-step" id="tl-4">4. 점심식사</span>
-            <span class="timeline-step" id="tl-5">5. 오후업무</span>
-            <span class="timeline-step" id="tl-6">6. 저녁식사</span>
-            <span class="timeline-step" id="tl-7">7. 체력강화</span>
-            <span class="timeline-step" id="tl-8">8. 취침</span>
+        <div class="status-box">
+            <div class="status-title">🛡️ 왕실 군사력</div>
+            <div class="status-num" id="regal-military">150 명</div>
         </div>
-
-        <!-- 단계별 실시간 화면 출력 컨테이너 -->
-        <div id="stage-content-panel" class="stage-panel">
-            <!-- 자바스크립트에 의해 매 유저 인터랙션마다 동적으로 변경되는 구역 -->
+        <div class="status-box">
+            <div class="status-title">👥 백성 충성도</div>
+            <div class="status-num" id="regal-loyalty">60 %</div>
         </div>
     </div>
 
+    <!-- 메뉴 바 -->
+    <div class="royal-menu">
+        <div class="menu-tab active-tab" id="menu-duty" onclick="changeRoyalTab('duty')">📜 국정 업무</div>
+        <div class="menu-tab" id="menu-roulette" onclick="changeRoyalTab('roulette')">🎰 재정 룰렛</div>
+        <div class="menu-tab" id="menu-breakfast" onclick="changeRoyalTab('breakfast')">🍳 아침 식사</div>
+        <div class="menu-tab" id="menu-lunch" onclick="changeRoyalTab('lunch')">🍱 점심 식사</div>
+    </div>
+
+    <!-- 1. 국정 업무 패널 -->
+    <div id="panel-duty" class="screen-panel visible">
+        <h3 class="panel-title">📜 국정 대소사 처리</h3>
+        <p>왕국에 당면한 과제들을 확률적 결단으로 해결합니다. 결과가 나온 뒤에도 이 화면에 계속 유지됩니다.</p>
+        
+        <label for="duty-select">처리할 업무 선택:</label>
+        <select id="duty-select" class="royal-select">
+            <option value="petition">백성들의 억울한 민원 해결 (성공률 65% | 보상: 충성도 +15% / 실패시: 충성도 -10%)</option>
+            <option value="rain">가뭄 해소를 위한 기우제 거행 (성공률 35% | 보상: 골드 +400 / 실패시: 골드 -200)</option>
+            <option value="border">이웃 국가와의 국경 분쟁 조율 (성공률 50% | 보상: 군사력 +30, 골드 +200 / 실패시: 군사력 -40)</option>
+        </select>
+
+        <button class="royal-btn" onclick="executeRoyalDuty()">결단 내리기</button>
+        <div class="scroll-result" id="duty-result">상소문을 읽고 결단을 내리십시오. 결과는 이 자리에 계속 유지됩니다.</div>
+    </div>
+
+    <!-- 2. 재정 룰렛 패널 -->
+    <div id="panel-roulette" class="screen-panel">
+        <h3 class="panel-title">🎰 왕실 재정 베팅 룰렛</h3>
+        <p>왕국의 재정을 무작위 배율 판에 던집니다. 한 번에 여러 번 돌려 결과를 합산할 수 있습니다.</p>
+        
+        <label for="roulette-gold-bet">1회당 베팅할 국고 (Gold):</label>
+        <input type="number" id="roulette-gold-bet" class="royal-input" value="100" min="10">
+
+        <label for="roulette-spin-count">룰렛 연속 가동 회차 선택:</label>
+        <select id="roulette-spin-count" class="royal-select">
+            <option value="1">1회 작동</option>
+            <option value="3">3회 연속 가동</option>
+            <option value="5">5회 연속 가동</option>
+            <option value="10">10회 연속 가동</option>
+        </select>
+
+        <button class="royal-btn" onclick="executeFinanceRoulette()">룰렛 휠 돌리기</button>
+        <div class="scroll-result" id="roulette-result">배율 추첨 결과가 여기에 정밀하게 누적 합산되어 나타납니다.</div>
+    </div>
+
+    <!-- 3. 아침 식사 패널 -->
+    <div id="panel-breakfast" class="screen-panel">
+        <h3 class="panel-title">🍳 아침 식사: 독이 든 성찬</h3>
+        <p>세 개의 그릇 중 단 하나에는 **치명적인 독**이 들어있습니다. 무사히 아침을 넘기면 강력한 가호(스탯 상승)가 따릅니다.</p>
+        
+        <div class="food-court">
+            <div class="food-dish" onclick="eatFood('breakfast', 1)">
+                <div class="food-icon">🍞</div>
+                <div>호밀빵 and 버터</div>
+            </div>
+            <div class="food-dish" onclick="eatFood('breakfast', 2)">
+                <div class="food-icon">🥣</div>
+                <div>따뜻한 오트밀</div>
+            </div>
+            <div class="food-dish" onclick="eatFood('breakfast', 3)">
+                <div class="food-icon">🥓</div>
+                <div>훈제 베이컨</div>
+            </div>
+        </div>
+        <div class="scroll-result" id="breakfast-result">시종들이 음식을 대령했습니다. 독이 들지 않은 음식을 신중하게 고르십시오.</div>
+    </div>
+
+    <!-- 4. 점심 식사 패널 -->
+    <div id="panel-lunch" class="screen-panel">
+        <h3 class="panel-title">🍱 점심 식사: 독이 든 만찬</h3>
+        <p>오후 국정을 시작하기 전 식사 시간입니다. 마찬가지로 세 그릇 중 하나에는 **왕을 암살하려는 독**이 들어있습니다.</p>
+        
+        <div class="food-court">
+            <div class="food-dish" onclick="eatFood('lunch', 1)">
+                <div class="food-icon">🍗</div>
+                <div>구운 칠면조</div>
+            </div>
+            <div class="food-dish" onclick="eatFood('lunch', 2)">
+                <div class="food-icon">🍲</div>
+                <div>왕실 특제 스튜</div>
+            </div>
+            <div class="food-dish" onclick="eatFood('lunch', 3)">
+                <div class="food-icon">🥧</div>
+                <div>달콤한 미트파이</div>
+            </div>
+        </div>
+        <div class="scroll-result" id="lunch-result">왕실 요리사가 요리를 내왔습니다. 독이 없는 안전한 접시를 선택하면 국정이 재개됩니다.</div>
+    </div>
 </div>
 
 <script>
-    // 상태 변수 정의 (5대 핵심 스탯)
-    let gameDay = 1;
-    let monarchName = "";
-    let currentStep = 1; // 1부터 8까지의 타임라인 고정 스텝 상태값
-
-    let stats = {
+    // 왕국의 원본 스탯 변수 구조
+    let kingdomData = {
         gold: 1000,
         military: 150,
-        loyalty: 60,
-        population: 500,
-        health: 100
+        loyalty: 60
     };
 
-    // 로그인 진행 기능
-    function ascendThrone() {
-        const nameInput = document.getElementById('monarch-name').value.trim();
-        if(!nameInput) {
-            alert("군주의 이름을 공백 없이 적어주십시오.");
-            return;
+    // 스탯 UI를 갱신해주는 시스템
+    function renderPalaceUI() {
+        document.getElementById('regal-gold').innerText = kingdomData.gold.toLocaleString() + " Gold";
+        document.getElementById('regal-military').innerText = kingdomData.military + " 명";
+        document.getElementById('regal-loyalty').innerText = kingdomData.loyalty + " %";
+
+        // 파산 및 패배 엔딩 처리 리셋
+        if (kingdomData.gold <= 0) {
+            alert("🏛️ 국고 파산 엔딩: 왕실 자금이 고갈되어 반란군에게 왕궁을 점령당했습니다.");
+            resetPalaceGame();
+        } else if (kingdomData.loyalty <= 0) {
+            alert("🔥 민중 혁명 엔딩: 백성들의 충성도가 바닥나 단두대에 올랐습니다.");
+            resetPalaceGame();
+        } else if (kingdomData.military <= 0) {
+            alert("⚔️ 국방 멸망 엔딩: 군사력이 전멸하여 이웃 강대국의 침략으로 왕국이 병합되었습니다.");
+            resetPalaceGame();
         }
-        monarchName = nameInput;
-        document.getElementById('display-title').innerText = `👑 ${monarchName} 왕의 알현실`;
+    }
+
+    function resetPalaceGame() {
+        kingdomData.gold = 1000;
+        kingdomData.military = 150;
+        kingdomData.loyalty = 60;
+        renderPalaceUI();
+        changeRoyalTab('duty');
+        document.getElementById('duty-result').innerText = "상소문을 읽고 결단을 내리십시오. 결과는 이 자리에 계속 유지됩니다.";
+        document.getElementById('roulette-result').innerText = "배율 추첨 결과가 여기에 정밀하게 누적 합산되어 나타납니다.";
+        document.getElementById('breakfast-result').innerText = "시종들이 음식을 대령했습니다. 독이 들지 않은 음식을 신중하게 고르십시오.";
+        document.getElementById('lunch-result').innerText = "왕실 요리사가 요리를 내왔습니다. 독이 없는 안전한 접시를 선택하면 국정이 재개됩니다.";
+    }
+
+    // 탭 이동 처리
+    function changeRoyalTab(tabKey) {
+        // 모든 패널 닫기
+        const panels = document.querySelectorAll('.screen-panel');
+        panels.forEach(p => p.classList.remove('visible'));
+
+        // 모든 탭 하이라이트 지우기
+        const tabs = document.querySelectorAll('.menu-tab');
+        tabs.forEach(t => t.classList.remove('active-tab'));
+
+        // 타겟 패널 열기 및 하이라이트 활성화
+        document.getElementById('panel-' + tabKey).classList.add('visible');
+        document.getElementById('menu-' + tabKey).classList.add('active-tab');
+    }
+
+    // 국정 업무 결단 처리
+    function executeRoyalDuty() {
+        const dutyType = document.getElementById('duty-select').value;
+        const resultDisplay = document.getElementById('duty-result');
         
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('game-screen').style.display = 'block';
-        
-        currentStep = 1;
-        updateStatsUI();
-        loadTimelineStage();
-    }
+        let dice = Math.random();
+        let logMessage = "";
 
-    // 게임 상태 실시간 렌더링 및 패배/사망 엔딩 체크 수문장 리스트
-    function updateStatsUI() {
-        document.getElementById('stat-gold').innerText = stats.gold.toLocaleString();
-        document.getElementById('stat-military').innerText = stats.military.toLocaleString() + " 명";
-        document.getElementById('stat-loyalty').innerText = stats.loyalty + "%";
-        document.getElementById('stat-population').innerText = stats.population.toLocaleString() + " 명";
-        document.getElementById('stat-health').innerText = stats.health;
-        document.getElementById('display-day').innerText = `Day ${gameDay}`;
-
-        // 상한선 제한 처리 조치
-        if(stats.loyalty > 100) stats.loyalty = 100;
-        if(stats.health > 200) stats.health = 200;
-
-        // 5가지 자원 중 단 하나라도 0 이하로 파산하면 무자비한 게임오버 발동
-        if (stats.gold <= 0) {
-            triggerGameOver("🏛️ 국고 파산 엔딩: 재정 파탄으로 왕실 채권단과 용병들이 성문을 파괴하고 들어왔습니다.");
-        } else if (stats.military <= 0) {
-            triggerGameOver("⚔️ 국방 함락 엔딩: 국경을 지킬 군사력이 소멸하여 이웃 제국의 기습 병합을 당했습니다.");
-        } else if (stats.loyalty <= 0) {
-            triggerGameOver("🔥 민중 반란 엔딩: 백성들의 적개심이 분노를 넘어서 폭동을 유발해 왕좌를 끌어내렸습니다.");
-        } else if (stats.population <= 0) {
-            triggerGameOver("💀 유령 도시 엔딩: 감당할 수 없는 실책으로 영토 내 백성들이 모두 야반도주하여 아무도 살지 않는 성이 되었습니다.");
-        } else if (stats.health <= 0) {
-            triggerGameOver("☠️ 과로사 및 병사 엔딩: 국왕의 육체적 체력이 한계에 도달하여 침소에서 숨을 거두었습니다.");
-        }
-    }
-
-    function triggerGameOver(reason) {
-        alert(`${reason}\n\n[게임 오버] ${monarchName} 왕의 통치는 Day ${gameDay}에서 막을 내립니다.`);
-        location.reload();
-    }
-
-    // 8단계 순환형 고정 타임라인 관리 엔진
-    function loadTimelineStage() {
-        // 타임라인 상단 하이라이트 제어 바 초기화 및 적용
-        for(let i=1; i<=8; i++) {
-            document.getElementById(`tl-${i}`).classList.remove('current');
-        }
-        document.getElementById(`tl-${currentStep}`).classList.add('current');
-
-        const panel = document.getElementById('stage-content-panel');
-        panel.innerHTML = ""; // 구역 리셋 후 순차 진입
-
-        if (currentStep === 1) {
-            renderStep1(panel);
-        } else if (currentStep === 2) {
-            renderStep2(panel);
-        } else if (currentStep === 3) {
-            renderStep3(panel);
-        } else if (currentStep === 4) {
-            renderStep4(panel);
-        } else if (currentStep === 5) {
-            renderStep5(panel);
-        } else if (currentStep === 6) {
-            renderStep6(panel);
-        } else if (currentStep === 7) {
-            renderStep7(panel);
-        } else if (currentStep === 8) {
-            renderStep8(panel);
-        }
-    }
-
-    function goToNextStep() {
-        currentStep++;
-        if (currentStep > 8) {
-            currentStep = 1;
-            gameDay++;
-        }
-        updateStatsUI();
-        loadTimelineStage();
-    }
-
-    /* =========================================================================
-       [1단계: 기상 권총 러시안 룰렛]
-       ========================================================================= */
-    function renderStep1(container) {
-        container.innerHTML = `
-            <h3 class="stage-header">🔫 1단계 : 침소의 기상식 (러시안 룰렛)</h3>
-            <p>국왕이시여, 눈을 뜨셨군요. 도파민 왕국의 아침은 권총 격발로 시작됩니다. 6발 중 1발(약 16.6%)은 실탄이 들어있습니다. 운명을 시험하십시오.</p>
-            <button class="palace-btn danger-shoot" id="btn-roulette-shoot" onclick="triggerRussianRoulette()">실린더 당기기 및 격발</button>
-            <div id="roulette-shoot-report" class="report-box" style="display:none;"></div>
-            <button class="palace-btn action-next" id="btn-roulette-next" style="display:none;" onclick="goToNextStep()">무사히 살아남아 아침 식사하러 가기</button>
-        `;
-    }
-
-    function triggerRussianRoulette() {
-        const dice = Math.floor(Math.random() * 6) + 1; // 1~6 무작위 난수
-        const report = document.getElementById('roulette-shoot-report');
-        const shootBtn = document.getElementById('btn-roulette-shoot');
-        const nextBtn = document.getElementById('btn-roulette-next');
-
-        shootBtn.style.display = 'none';
-        report.style.display = 'block';
-
-        if (dice === 1) {
-            report.innerHTML = `<span style="color:#e43f5a; font-weight:bold;">💥 [탕!!!] 차가운 격발음과 함께 총탄이 머리를 뚫었습니다... 당신은 즉사하셨습니다.</span>`;
-            setTimeout(() => {
-                triggerGameOver("🔫 러시안 룰렛 사망 엔딩: 운 없는 기상 권총 도박에서 실탄이 발사되었습니다.");
-            }, 1500);
-        } else {
-            stats.health += 5; // 생존 쾌감으로 체력 소폭 증가 보너스 조치
-            report.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">클릭... 틱! 💨 [공이치기 소리만 울림]\n천만다행입니다! 빈 약실이었습니다. 아드레날린과 도파민이 전신을 감쌉니다. (체력 +5)</span>`;
-            nextBtn.style.display = 'block';
-            updateStatsUI();
-        }
-    }
-
-    /* =========================================================================
-       [2단계: 아침 식사 독 도박 (3택 극단적 사망 룰)]
-       ========================================================================= */
-    function renderStep2(container) {
-        container.innerHTML = `
-            <h3 class="stage-header">🍳 2단계 : 아침 식사 (33% 확률의 즉사 밥상)</h3>
-            <p>시종들이 세 종류의 아침 요리를 준비했습니다. 이 중 **하나의 접시**에는 암살자의 치명적인 맹독이 발라져 있습니다. 생존 시 민심과 체력이 차오릅니다.</p>
-            <div class="food-table">
-                <div class="food-plate" onclick="handleMeal('breakfast', 1)">
-                    <div class="food-emoji">🍞</div>
-                    <div class="food-name">거친 호밀빵</div>
-                </div>
-                <div class="food-plate" onclick="handleMeal('breakfast', 2)">
-                    <div class="food-emoji">🥣</div>
-                    <div class="food-name">오트밀 죽</div>
-                </div>
-                <div class="food-plate" onclick="handleMeal('breakfast', 3)">
-                    <div class="food-emoji">🥓</div>
-                    <div class="food-name">바짝 구운 베이컨</div>
-                </div>
-            </div>
-            <div id="breakfast-meal-report" class="report-box" style="display:none;"></div>
-            <button class="palace-btn action-next" id="btn-breakfast-next" style="display:none;" onclick="goToNextStep()">소화를 시키며 오전 국정 업무실로 이동</button>
-        `;
-    }
-
-    /* =========================================================================
-       [4단계: 점심 식사 독 도박 (3택 극단적 사망 룰)]
-       ========================================================================= */
-    function renderStep4(container) {
-        container.innerHTML = `
-            <h3 class="stage-header">🍱 4단계 : 점심 식사 (33% 확률의 즉사 만찬)</h3>
-            <p>오전 업무를 마치고 찾아온 점심시간입니다. 아침과 동일하게 왕실 요리사가 내온 세 요리 중 **단 하나는 맹독 접시**입니다. 무사 통과 시 큰 스탯 혜택이 주어집니다.</p>
-            <div class="food-table">
-                <div class="food-plate" onclick="handleMeal('lunch', 1)">
-                    <div class="food-emoji">🍗</div>
-                    <div class="food-name">칠면조 다리구이</div>
-                </div>
-                <div class="food-plate" onclick="handleMeal('lunch', 2)">
-                    <div class="food-emoji">🍲</div>
-                    <div class="food-name">양고기 스튜</div>
-                </div>
-                <div class="food-plate" onclick="handleMeal('lunch', 3)">
-                    <div class="food-emoji">🥧</div>
-                    <div class="food-name">달콤한 미트파이</div>
-                </div>
-            </div>
-            <div id="lunch-meal-report" class="report-box" style="display:none;"></div>
-            <button class="palace-btn action-next" id="btn-lunch-next" style="display:none;" onclick="goToNextStep()">포만감을 느끼며 오후 국정 업무실로 이동</button>
-        `;
-    }
-
-    /* =========================================================================
-       [6단계: 저녁 식사 독 도박 (3택 극단적 사망 룰)]
-       ========================================================================= */
-    function renderStep6(container) {
-        container.innerHTML = `
-            <h3 class="stage-header">🥩 6단계 : 저녁 식사 (33% 확률의 즉사 성찬)</h3>
-            <p>기나긴 하루의 마지막 만찬입니다. 궁정 연회장에 배치된 세 접시 중 **하나에 치명적인 복어독**이 스며들어 있습니다. 살아남아 밤을 맞이하십시오.</p>
-            <div class="food-table">
-                <div class="food-plate" onclick="handleMeal('evening', 1)">
-                    <div class="food-emoji">🥩</div>
-                    <div class="food-name">티본 스테이크</div>
-                </div>
-                <div class="food-plate" onclick="handleMeal('evening', 2)">
-                    <div class="food-emoji">🦞</div>
-                    <div class="food-name">랍스터 찜</div>
-                </div>
-                <div class="food-plate" onclick="handleMeal('evening', 3)">
-                    <div class="food-emoji">🍰</div>
-                    <div class="food-name">왕실 초콜릿 케이크</div>
-                </div>
-            </div>
-            <div id="evening-meal-report" class="report-box" style="display:none;"></div>
-            <button class="palace-btn action-next" id="btn-evening-next" style="display:none;" onclick="goToNextStep()">몸을 추스르며 침소 야간 도박장으로 이동</button>
-        `;
-    }
-
-    // 삼시세끼 식사 독 도박 연산 전담 장치
-    function handleMeal(mealKey, selectedIndex) {
-        const report = document.getElementById(`${mealKey}-meal-report`);
-        const nextBtn = document.getElementById(`btn-${mealKey}-next`);
-        
-        // 클릭 후 요리 접시들 조작 불가하게 비활성화
-        const plates = document.querySelectorAll('.food-plate');
-        plates.forEach(p => p.style.pointerEvents = 'none');
-
-        // 1, 2, 3번 접시 중 무작위 맹독 주입 배치
-        const poisonIndex = Math.floor(Math.random() * 3) + 1;
-        report.style.display = 'block';
-
-        if (selectedIndex === poisonIndex) {
-            report.innerHTML = `<span style="color:#e43f5a; font-weight:bold;">💀 컥...! 숨이 막힙니다. 접시 바닥에 무색무취의 독이 칠해져 있었습니다. 당신은 피를 토하며 즉사했습니다.</span>`;
-            setTimeout(() => {
-                triggerGameOver(`💀 암살 사망 엔딩: ${mealKey} 식사에 숨겨져 있던 독극물을 섭취하여 승하하셨습니다.`);
-            }, 1500);
-        } else {
-            let rewards = "";
-            if (mealKey === 'breakfast') {
-                stats.health += 15;
-                stats.loyalty += 8;
-                rewards = "(체력 +15, 민심 +8% 보너스 지급!)";
-            } else if (mealKey === 'lunch') {
-                stats.gold += 150;
-                stats.population += 25;
-                rewards = "(국고 +150 Gold, 인구 +25명 유입 보너스 지급!)";
-            } else if (mealKey === 'evening') {
-                stats.military += 20;
-                stats.health += 20;
-                rewards = "(군사력 +20명, 체력 +20 보너스 지급!)";
-            }
-            
-            report.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">🍽️ 아삭, 우물우물... 정말 훌륭하고 안전한 요리였습니다!\n독은 전혀 들어있지 않았고 기운이 무럭무럭 솟구칩니다. ${rewards}</span>`;
-            nextBtn.style.display = 'block';
-            updateStatsUI();
-        }
-    }
-
-    /* =========================================================================
-       [3단계: 오전 국정 업무 (군사, 재정, 민생, 외교 중 선택 확률형 - 화면유지)]
-       ========================================================================= */
-    function renderStep3(container) {
-        container.innerHTML = `
-            <h3 class="stage-header">📜 3단계 : 오전 국정 대소사 집행 (결과 보고 후 화면 유지)</h3>
-            <p>왕국을 위한 결단을 내릴 시간입니다. 네 가지 핵심 파트 중 하나를 지정하여 확률 주사위를 굴리십시오. 결과가 나와도 튕기지 않고 화면은 유지됩니다.</p>
-            
-            <label for="work-select-box">수행할 부서 업무 낙점:</label>
-            <select id="work-select-box" class="palace-select">
-                <option value="military">🛡️ [군사 업무] 국경 순찰 요새화 (성공확률 60% | 보상: 군사력 +40, 국고 -50 / 실패: 군사력 -30, 체력 -10)</option>
-                <option value="finance">🏛️ [재정 업무] 지하 금광 채굴권 개방 (성공확률 40% | 보상: 국고 +350 / 실패: 국고 -150, 민심 -10%)</option>
-                <option value="welfare">👥 [민생 업무] 역병 치료 포고령 발령 (성공확률 70% | 보상: 민심 +20%, 인구 +40 / 실패: 민심 -15%, 인구 -30)</option>
-                <option value="diplomacy">🤝 [외교 업무] 인근 공작령과의 정략 혼담 (성공확률 50% | 보상: 국고 +200, 군사력 +30 / 실패: 민심 -10%, 체력 -15)</option>
-            </select>
-
-            <button class="palace-btn" onclick="executePalaceWork()">부서 주사위 결단</button>
-            <div id="work-action-report" class="report-box">부서 업무를 선택하고 결단을 내리십시오. 결과는 이 자리에서 계속 대기 상태로 유지됩니다.</div>
-            <button class="palace-btn action-next" onclick="goToNextStep()">오전 국정 일과를 매듭짓고 점심 식사하러 가기</button>
-        `;
-    }
-
-    function executePalaceWork() {
-        const selectedWork = document.getElementById('work-select-box').value;
-        const report = document.getElementById('work-action-report');
-        const roll = Math.random();
-        let log = "";
-
-        if (selectedWork === 'military') {
-            if (roll < 0.60) {
-                stats.military += 40;
-                stats.gold -= 50;
-                log = "🛡️ [군사 업무 대성공]\n철저한 훈련과 국경 장벽 요새화 작전이 대성공을 거두었습니다!\n(결과: 군사력 +40 명 상승 / 군자금 보급으로 국고 -50 Gold)";
+        if (dutyType === 'petition') {
+            if (dice < 0.65) {
+                kingdomData.loyalty += 15;
+                if (kingdomData.loyalty > 100) kingdomData.loyalty = 100;
+                logMessage = "📜 [민원 해결 성공]\n억울한 농민들의 경계선 분쟁을 명철하게 판결했습니다! 백성들이 성문 앞에서 만세를 외칩니다.\n(결과: 백성 충성도 +15%)";
             } else {
-                stats.military -= 30;
-                stats.health -= 10;
-                log = "🛡️ [군사 업무 실패]\n경비대가 이민족의 게릴라 습격에 당해 기지가 불타고 말았습니다.\n(결과: 군사력 -30 명 급감 / 극심한 수치심으로 국왕 체력 -10)";
+                kingdomData.loyalty -= 10;
+                logMessage = "📜 [민원 해결 실패]\n귀족들의 뇌물 서류에 휘둘려 그릇된 결정을 내렸습니다. 민심이 흉흉해집니다.\n(결과: 백성 충성도 -10%)";
             }
         } 
-        else if (selectedWork === 'finance') {
-            if (roll < 0.40) {
-                stats.gold += 350;
-                log = "🏛️ [재정 업무 대성공]\n폐광 깊숙한 곳에서 거대한 황금 노다지 맥을 찾아내 국고에 쏟아부었습니다!\n(결과: 국고 +350 Gold 증식)";
+        else if (dutyType === 'rain') {
+            if (dice < 0.35) {
+                kingdomData.gold += 400;
+                logMessage = "🥣 [기우제 대성공]\n제단에 바친 제물이 하늘을 감동시켰습니다! 가뭄이 해결되고 농업 생산물세가 폭발적으로 걷힙니다.\n(결과: 국정 보유고 +400 Gold)";
             } else {
-                stats.gold -= 150;
-                stats.loyalty -= 10;
-                log = "🏛️ [재정 업무 실패]\n탐사 비용만 허공으로 날렸으며, 강제 부역으로 인해 광부들의 원망이 심해집니다.\n(결과: 국고 -150 Gold 손실 / 민심 -10%)";
+                kingdomData.gold -= 200;
+                logMessage = "🥣 [기우제 실패]\n마른 하늘에 먼지만 날립니다. 제사 비용으로 막대한 예산만 낭비했습니다.\n(결과: 국정 보유고 -200 Gold)";
             }
         } 
-        else if (selectedWork === 'welfare') {
-            if (roll < 0.70) {
-                stats.loyalty += 20;
-                stats.population += 40;
-                log = "👥 [민생 업무 대성공]\n왕실 약재고를 열어 처방한 구휼약이 적중했습니다! 역병이 가라앉고 활기를 되찾습니다.\n(결과: 민심 +20%, 영토 인구 +40명 증가)";
+        else if (dutyType === 'border') {
+            if (dice < 0.50) {
+                kingdomData.military += 30;
+                kingdomData.gold += 200;
+                logMessage = "⚔️ [국경 분쟁 승리]\n전술적 우위를 앞세워 외교 교섭과 소규모 교전에서 대승했습니다. 요충지를 확보합니다.\n(결과: 군사력 +30 명, 보유고 +200 Gold)";
             } else {
-                stats.loyalty -= 15;
-                stats.population -= 30;
-                log = "👥 [민생 업무 실패]\n돌팔이 의술을 장려하다 역병이 더 창궐했습니다. 백성들이 도망치기 시작합니다.\n(결과: 민심 -15% 급락 / 인구 -30명 사망 및 이탈)";
-            }
-        } 
-        else if (selectedWork === 'diplomacy') {
-            if (roll < 0.50) {
-                stats.gold += 200;
-                stats.military += 30;
-                log = "🤝 [외교 업무 대성공]\n정략 혼담이 화려하게 체결되어 지참금과 동맹 기사단 증원 협약을 맺어왔습니다.\n(결과: 상단 지참금 국고 +200 Gold / 군사 동맹 +30 명)";
-            } else {
-                stats.loyalty -= 10;
-                stats.health -= 15;
-                log = "🤝 [외교 업무 실패]\n외교 사절단이 말실수를 저질러 협상이 결렬되고 큰 비웃음거리로 전락했습니다.\n(결과: 왕실의 위신 추락으로 민심 -10% / 스트레스로 체력 -15)";
+                kingdomData.military -= 40;
+                logMessage = "⚔️ [국경 분쟁 참패]\n적군의 기습 부대에 밀려 방어선 군사들이 궤멸적 타격을 입고 퇴각했습니다.\n(결과: 왕실 군사력 -40 명)";
             }
         }
 
-        report.innerText = log;
-        updateStatsUI();
+        resultDisplay.innerText = logMessage;
+        renderPalaceUI();
     }
 
-    /* =========================================================================
-       [5단계: 오후 국정 업무 (군사, 재정, 민생, 외교 중 재정 룰렛 다중 회차 슬롯머신 - 화면유지)]
-       ========================================================================= */
-    function renderStep5(container) {
-        container.innerHTML = `
-            <h3 class="stage-header">🎰 5단계 : 오후 국정 업무 (재정 배팅 다중 연속 룰렛 - 화면 유지)</h3>
-            <p>오후 국정 업무는 오직 **국고**를 이용한 재정 슬롯 룰렛으로 대체합니다. 판돈과 배율판을 돌려 폭발적인 도파민을 느껴보십시오. 횟수를 택해 연속 다발 연산이 가능하며 결과는 고스란히 여기에 누적 유지됩니다.</p>
-            
-            <label for="roulette-single-bet">1회 격발당 베팅할 왕실 자금 (Gold):</label>
-            <input type="number" id="roulette-single-bet" class="palace-input" value="100" min="20">
+    // 재정 룰렛 처리
+    function executeFinanceRoulette() {
+        const betValueInput = document.getElementById('roulette-gold-bet');
+        const countSelector = document.getElementById('roulette-spin-count');
+        const resultDisplay = document.getElementById('roulette-result');
 
-            <label for="roulette-loop-count">연속으로 휠을 굴릴 회수 설정:</label>
-            <select id="roulette-loop-count" class="palace-select">
-                <option value="1">단발 1회 가동</option>
-                <option value="3">분노의 3회 연속 회전</option>
-                <option value="5">질주의 5회 연속 회전</option>
-                <option value="10">올인급 10회 연속 폭격 회전</option>
-            </select>
-
-            <button class="palace-btn" onclick="executeMultiFinanceRoulette()">슬롯 휠 레버 당기기</button>
-            <div id="roulette-multi-report" class="report-box">레버를 당기면 모든 회차의 당첨/낙첨 내역이 세부적으로 파싱되어 기록됩니다. 결과창은 고정 유지됩니다.</div>
-            <button class="palace-btn action-next" onclick="goToNextStep()">재정 장부를 덮고 저녁 식사하러 가기</button>
-        `;
-    }
-
-    function executeMultiFinanceRoulette() {
-        const betInput = document.getElementById('roulette-single-bet');
-        const countSelect = document.getElementById('roulette-loop-count');
-        const report = document.getElementById('roulette-multi-report');
-
-        let singleCost = parseInt(betInput.value);
-        let loops = parseInt(countSelect.value);
-        let totalCost = singleCost * loops;
+        let singleCost = parseInt(betValueInput.value);
+        let loops = parseInt(countSelector.value);
+        let totalRequired = singleCost * loops;
 
         if (isNaN(singleCost) || singleCost <= 0) {
-            report.innerText = "🚨 국고 베팅 수치가 정상이 아닙니다.";
+            resultDisplay.innerText = "🚨 올바른 국고 베팅 수치를 입력해 주십시오.";
             return;
         }
 
-        if (stats.gold < totalCost) {
-            report.innerText = `🚨 [베팅 불가능]\n현재 선택한 ${loops}회 연속 가동에 요구되는 비용은 총 ${totalCost} Gold입니다.\n하지만 보유하고 계신 국고는 현재 ${stats.gold} Gold뿐입니다.`;
+        if (kingdomData.gold < totalRequired) {
+            resultDisplay.innerText = `🚨 보유고 부족!\n선택하신 ${loops}회 연속 구동을 위해 필요한 총액은 ${totalRequired} Gold이나, 현재 왕실 잔고는 ${kingdomData.gold} Gold입니다.`;
             return;
         }
 
-        let totalWinnings = 0;
-        let historyArray = [];
+        let spinHistory = [];
+        let totalReturnGold = 0;
 
-        // 확정 배율 확률 풀리스트 
-        // 0.0배(꽝: 45%) / 0.5배(반타작: 20%) / 1.3배(소소: 20%) / 2.5배(중박: 10%) / 5.0배(왕실잭팟: 5%)
-        for (let i = 1; i <= loops; i++) {
-            stats.gold -= singleCost; // 선 베팅 차감 조치
-            let r = Math.random();
-            let mult = 0;
-            let title = "";
+        for (let step = 1; step <= loops; step++) {
+            kingdomData.gold -= singleCost;
+            let roll = Math.random();
+            let currentMultiplier = 0;
+            let outcomeName = "";
 
-            if (r < 0.45) {
-                mult = 0.0;
-                title = "💥 [꽝] 투자 전액 증발";
-            } else if (r < 0.65) {
-                mult = 0.5;
-                title = "🤕 [반손실] 반이라도 건짐";
-            } else if (r < 0.85) {
-                mult = 1.3;
-                title = "💰 [이득] 1.3배 약소 증식";
-            } else if (r < 0.95) {
-                mult = 2.5;
-                title = "🔥 [더블+] 2.5배 중대 대박";
+            if (roll < 0.45) {
+                currentMultiplier = 0.0;
+                outcomeName = "💥 [파산/꽝] 국고 증발";
+            } else if (roll < 0.65) {
+                currentMultiplier = 0.5;
+                outcomeName = "🤕 [반손실] 절반 회수";
+            } else if (roll < 0.85) {
+                currentMultiplier = 1.2;
+                outcomeName = "💰 [소이득] 1.2배 이익";
+            } else if (roll < 0.95) {
+                currentMultiplier = 2.0;
+                outcomeName = "🔥 [더블] 2.0배 증식";
             } else {
-                mult = 5.0;
-                title = "👑 [왕실 대폭발] 5.0배 슈퍼 초잭팟";
+                currentMultiplier = 4.0;
+                outcomeName = "👑 [왕실 대박] 4.0배 잭팟";
             }
 
-            let winGold = Math.floor(singleCost * mult);
-            stats.gold += winGold; // 즉각 국고 지급 연산
-            totalWinnings += winGold;
+            let winnings = Math.floor(singleCost * currentMultiplier);
+            kingdomData.gold += winnings;
+            totalReturnGold += winnings;
 
-            historyArray.push(`   ▶ [${i}회차 추첨] 결과 : ${title} ➔ 획득액: +${winGold} Gold`);
+            spinHistory.push(`  ▶ [${step}회차] 배율추첨: ${outcomeName} ➔ 획득: +${winnings} Gold (지출: -${singleCost})`);
         }
 
-        let profitLoss = totalWinnings - totalCost;
-        let profitSign = profitLoss >= 0 ? `🟢 순수 이익 합산: +${profitLoss} Gold` : `🔴 순수 손실 합산: ${profitLoss} Gold`;
+        let profitOrLoss = totalReturnGold - totalRequired;
+        let evaluationText = profitOrLoss >= 0 ? `🟢 최종 결과 이득: +${profitOrLoss} Gold` : `🔴 최종 결과 손실: ${profitOrLoss} Gold`;
 
-        report.innerText = `🎰 [오후 재정 룰렛 총 ${loops}회 다중 연산 결과 보고]\n` +
-                           `${historyArray.join('\n')}\n` +
-                           `-----------------------------------------------------\n` +
-                           `💰 지출한 총 판돈 : -${totalCost} Gold\n` +
-                           `💰 회수한 총 금액 : +${totalWinnings} Gold\n` +
-                           `📊 ${profitSign}`;
+        resultDisplay.innerText = `🎰 [왕실 룰렛 총 ${loops}회 연속 가동 결과 보고]\n` +
+                                   `${spinHistory.join('\n')}\n` +
+                                   `----------------------------------------\n` +
+                                   `▶ 총 투자 국고: -${totalRequired} Gold\n` +
+                                   `▶ 총 회수 국고: +${totalReturnGold} Gold\n` +
+                                   `▶ ${evaluationText}`;
 
-        updateStatsUI();
+        renderPalaceUI();
     }
 
-    /* =========================================================================
-       [7단계: 밤의 체력 강화 도박 (스탯 자원 걸고 확률 강화 콤보)]
-       ========================================================================= */
-    function renderStep7(container) {
-        container.innerHTML = `
-            <h3 class="stage-header">⚡ 7단계 : 밤의 침소 체력 강화 (확률 강화 도박)</h3>
-            <p>취침 전, 침실 비밀 제단에서 왕의 신체 능력을 강제로 증폭시키는 비술을 씁니다. 원하는 자원 스탯을 제물로 바쳐 강화에 도전하십시오. 성공하면 체력이 대폭 폭증하지만, 실패하면 제물로 바친 스탯만 분쇄됩니다.</p>
-            
-            <label for="sacrifice-stat-select">제물로 바칠 왕국 스탯 지정:</label>
-            <select id="sacrifice-stat-select" class="palace-select">
-                <option value="gold">🏛️ 국고 자금 200 Gold 투여 (성공률 50% | 성공시 체력 +40 / 실패시 200 Gold 영구 손실)</option>
-                <option value="military">🛡️ 왕실 정예군 30명 제물 투여 (성공률 65% | 성공시 체력 +35 / 실패시 30명 전사)</option>
-                <option value="population">🌾 농노 인구 50명 영혼 투여 (성공률 35% | 성공시 체력 +60 / 실패시 인구 50명 증발)</option>
-            </select>
-
-            <button class="palace-btn" onclick="executeHealthUpgradeGambling()">비술 촉발 (강화 도박)</button>
-            <div id="health-upgrade-report" class="report-box">침묵의 비술 주문을 외우십시오. 주사위 결과가 여기에 나타납니다.</div>
-            <button class="palace-btn action-next" id="btn-upgrade-next" onclick="goToNextStep()">강화 피드백을 마무리지어 침대로 가기</button>
-        `;
-    }
-
-    function executeHealthUpgradeGambling() {
-        const sacrificeType = document.getElementById('sacrifice-stat-select').value;
-        const report = document.getElementById('health-upgrade-report');
-        const roll = Math.random();
+    // 아침 및 점심 식사 (점심 식사 멈춤 현상 버그 수정 완료)
+    function eatFood(mealType, choiceIndex) {
+        const resultDisplay = document.getElementById(`${mealType}-result`);
         
-        // 반복 연산 방지를 위해 강화 버튼 한 번 누르면 잠금 처리
-        const upgradeBtn = document.querySelector('#stage-content-panel button.palace-btn');
-        if(upgradeBtn) upgradeBtn.style.pointerEvents = 'none';
+        let poisonIndex = Math.floor(Math.random() * 3) + 1;
 
-        if (sacrificeType === 'gold') {
-            if (stats.gold < 200) {
-                report.innerText = "🚨 제물로 바칠 국고가 부족하여 비술이 성립되지 않습니다.";
-                if(upgradeBtn) upgradeBtn.style.pointerEvents = 'auto';
-                return;
+        if (choiceIndex === poisonIndex) {
+            resultDisplay.innerHTML = `<span style="color:#e43f5a; font-weight:bold;">💀 암살 대성공... 접시에 맹독이 숨겨져 있었습니다! 왕은 피를 토하며 쓰러졌습니다.</span>`;
+            alert("💀 암살 엔딩: 식사에 들어있던 치명적인 독에 당해 왕이 승하하셨습니다. (게임 리셋)");
+            resetPalaceGame();
+        } else {
+            if (mealType === 'breakfast') {
+                kingdomData.loyalty += 8;
+                if (kingdomData.loyalty > 100) kingdomData.loyalty = 100;
+                resultDisplay.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">✨ 무사 통과! 음식이 아주 신선했습니다. 든든하게 배를 채운 왕은 백성들을 넓은 마음으로 굽어살핍니다. (백성 충성도 +8%)</span><br><br><button class="royal-btn" style="margin-top:10px;" onclick="changeRoyalTab('duty')">국정 업무 집행하러 가기</button>`;
+            } else if (mealType === 'lunch') {
+                kingdomData.military += 15;
+                resultDisplay.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">✨ 무사 통과! 요리사가 정성 들여 만든 고기 요리였습니다. 기운을 얻은 왕이 기사단을 호령합니다. (왕실 군사력 +15명)</span><br><br><button class="royal-btn" style="margin-top:10px;" onclick="changeRoyalTab('duty')">오후 국정 업무하러 가기</button>`;
             }
-            if (roll < 0.50) {
-                stats.health += 40;
-                report.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">✨ [강화 대성공] 황금의 영양 상태가 왕의 온몸에 주입되었습니다! (국왕 체력 +40 상승)</span>`;
-            } else {
-                stats.gold -= 200;
-                report.innerHTML = `<span style="color:#e43f5a; font-weight:bold;">💥 [강화 처참히 실패] 연금술 마법 진이 깨지며 투입한 금괴가 잿더미로 파괴되었습니다. (국고 -200 Gold)</span>`;
-            }
-        } 
-        else if (sacrificeType === 'military') {
-            if (stats.military < 30) {
-                report.innerText = "🚨 제물로 바칠 정예 군사력이 모자랍니다.";
-                if(upgradeBtn) upgradeBtn.style.pointerEvents = 'auto';
-                return;
-            }
-            if (roll < 0.65) {
-                stats.health += 35;
-                report.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">✨ [강화 대성공] 군사들의 굳건한 생명 에너지가 국왕에게 피드백되었습니다. (국왕 체력 +35 상승)</span>`;
-            } else {
-                stats.military -= 30;
-                report.innerHTML = `<span style="color:#e43f5a; font-weight:bold;">💥 [강화 처참히 실패] 의식이 통제 불능에 빠져 경비대 무사 30명이 주화입마로 사망했습니다. (군사력 -30 명)</span>`;
-            }
-        } 
-        else if (sacrificeType === 'population') {
-            if (stats.population < 50) {
-                report.innerText = "🚨 갈취할 영토 인구수가 너무 부족해 영혼 추출이 안 됩니다.";
-                if(upgradeBtn) upgradeBtn.style.pointerEvents = 'auto';
-                return;
-            }
-            if (roll < 0.35) {
-                stats.health += 60;
-                report.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">✨ [강화 대성공!!] 기적의 확률을 뚫고 수십 명의 생체 활력이 이식되었습니다. (국왕 체력 +60 폭발적 증가)</span>`;
-            } else {
-                stats.population -= 50;
-                report.innerHTML = `<span style="color:#e43f5a; font-weight:bold;">💥 [강화 처참히 실패] 제단의 부작용으로 영토 내 가구 50명이 공포를 느끼고 국경 밖으로 망명했습니다. (인구 -50 명)</span>`;
-            }
+            renderPalaceUI();
         }
-
-        updateStatsUI();
     }
 
-    /* =========================================================================
-       [8단계: 잠자기 및 익일(Day) 회전 준비]
-       ========================================================================= */
-    function renderStep8(container) {
-        container.innerHTML = `
-            <h3 class="stage-header">💤 8단계 : 취침 및 밤의 정산 (하루의 마감)</h3>
-            <p>오늘 하루도 온갖 확률 도박 속에서 용케 숨줄기를 붙잡고 살아남으셨습니다. 국왕의 눈꺼풀이 무거워집니다.</p>
-            <div class="report-box">
-🌙 [왕실 취침 정산 보고]
-당일 살아남은 국왕의 위엄으로 백성들의 번식과 귀화가 일어납니다. (인구 +10명 유입)
-반면, 거대한 밤의 유지비와 기사단 급료가 자동으로 지출됩니다. (국고 -40 Gold)
-또한 휴식을 통해 일정 수준의 체력이 미세 회복됩니다. (체력 +10 회복)
-            </div>
-            <button class="palace-btn" style="background:linear-gradient(#9b59b6, #8e44ad); color:#fff; border-color:#7d3c98;" onclick="executeSleepAndNextDay()">잠자기 및 내일 아침 눈뜨기</button>
-        `;
-    }
-
-    function executeSleepAndNextDay() {
-        // 밤 정산 자원 증감 적용
-        stats.population += 10;
-        stats.gold -= 40;
-        stats.health += 10;
-
-        // 하루 일과 루프 끝맺음 후 익일 아침 기상(스텝 1)으로 완전 강제 리셋 회전
-        currentStep = 1;
-        gameDay++;
-
-        updateStatsUI();
-        loadTimelineStage();
-    }
+    // 페이지 진입 초기 셋팅
+    renderPalaceUI();
 </script>
 
 </body>
