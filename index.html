@@ -1,1049 +1,841 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도파민 왕국: 확률의 군주</title>
-    <!-- 구글 폰트 적용 (로열 & 진중한 분위기) -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #d4af37; /* 황실 골드 */
-            --danger-color: #9a0505; /* 피빛 레드 */
-            --bg-dark: #0f0f12;
-            --panel-bg: rgba(20, 20, 25, 0.9);
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도파민 왕국: 확률의 군주</title>
+    <!-- 구글 폰트 적용 (로열 & 진중한 분위기) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #d4af37; /* 황실 골드 */
+            --danger-color: #9a0505; /* 피빛 레드 */
+            --bg-dark: #0f0f12;
+            --panel-bg: rgba(20, 20, 25, 0.9);
+        }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-        body {
-            font-family: 'Noto Serif KR', serif;
-            background-color: var(--bg-dark);
-            color: #e0e0e3;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-            background-size: cover;
-            background-position: center;
-            transition: background-image 0.8s ease, filter 0.5s ease;
-        }
+        body {
+            font-family: 'Noto Serif KR', serif;
+            background-color: var(--bg-dark);
+            color: #e0e0e3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.8s ease, filter 0.5s ease;
+        }
 
-        /* 피 덮임 효과용 오버레이 */
-        #blood-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(154, 5, 5, 0.7);
-            z-index: 9999;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
+        /* 피 덮임 효과용 오버레이 */
+        #blood-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(154, 5, 5, 0.7);
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
 
-        /* 컨테이너 */
-        .container {
-            width: 90%;
-            max-width: 750px;
-            background: var(--panel-bg);
-            border: 3px solid var(--primary-color);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
-            backdrop-filter: blur(5px);
-        }
+        /* 컨테이너 */
+        .container {
+            width: 90%;
+            max-width: 750px;
+            background: var(--panel-bg);
+            border: 3px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(5px);
+        }
 
-        h1, h2, h3 {
-            font-family: 'Cinzel', 'Noto Serif KR', serif;
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 20px;
-            text-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
-        }
+        h1, h2, h3 {
+            font-family: 'Cinzel', 'Noto Serif KR', serif;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+        }
 
-        /* 폼 공통 스타일 */
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
+        /* 폼 공통 스타일 */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
 
-        input[type="text"], input[type="password"], input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            background: #1a1a24;
-            border: 1px solid var(--primary-color);
-            color: white;
-            border-radius: 6px;
-            outline: none;
-            font-size: 1rem;
-        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            background: #1a1a24;
+            border: 1px solid var(--primary-color);
+            color: white;
+            border-radius: 6px;
+            outline: none;
+            font-size: 1rem;
+        }
 
-        .input-suffix-group {
-            display: flex;
-            align-items: center;
-        }
+        .input-suffix-group {
+            display: flex;
+            align-items: center;
+        }
 
-        .input-suffix-group span {
-            margin-left: 10px;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
+        .input-suffix-group span {
+            margin-left: 10px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
 
-        .radio-group {
-            display: flex;
-            gap: 20px;
-            margin-top: 5px;
-        }
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 5px;
+        }
 
-        .radio-group label {
-            display: inline-flex;
-            align-items: center;
-            cursor: pointer;
-            color: #fff;
-        }
+        .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            color: #fff;
+        }
 
-        .radio-group input {
-            margin-right: 8px;
-            accent-color: var(--primary-color);
-        }
+        .radio-group input {
+            margin-right: 8px;
+            accent-color: var(--primary-color);
+        }
 
-        /* 버튼 */
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #1a1a24 0%, #2c2c3d 100%);
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            font-weight: bold;
-            font-size: 1.1rem;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            margin-top: 15px;
-            text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
-        }
+        /* 버튼 */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #1a1a24 0%, #2c2c3d 100%);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+        }
 
-        .btn:hover {
-            background: var(--primary-color);
-            color: #111;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
-        }
+        .btn:hover {
+            background: var(--primary-color);
+            color: #111;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
 
-        .btn:disabled {
-            border-color: #555;
-            color: #555;
-            background: #15151a;
-            cursor: not-allowed;
-            text-shadow: none;
-        }
+        .btn:disabled {
+            border-color: #555;
+            color: #555;
+            background: #15151a;
+            cursor: not-allowed;
+            text-shadow: none;
+        }
 
-        /* 스탯 바 */
-        .status-bar {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
+        /* 스탯 바 */
+        .status-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
 
-        .stat-item {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 8px;
-            border-radius: 4px;
-            text-align: center;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-        }
+        .stat-item {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
 
-        .stat-label {
-            font-size: 0.8rem;
-            color: #aaa;
-            margin-bottom: 4px;
-        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-bottom: 4px;
+        }
 
-        .stat-val {
-            font-weight: bold;
-            color: var(--primary-color);
-            font-size: 1.1rem;
-        }
+        .stat-val {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
 
-        .hp-bar-container {
-            grid-column: span 3;
-            background: #222;
-            height: 18px;
-            border-radius: 9px;
-            border: 1px solid var(--primary-color);
-            overflow: hidden;
-            position: relative;
-            margin-top: 5px;
-        }
+        .hp-bar-container {
+            grid-column: span 3;
+            background: #222;
+            height: 18px;
+            border-radius: 9px;
+            border: 1px solid var(--primary-color);
+            overflow: hidden;
+            position: relative;
+            margin-top: 5px;
+        }
 
-        .hp-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #c0392b 0%, #e74c3c 100%);
-            width: 100%;
-            transition: width 0.4s ease;
-        }
+        .hp-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #c0392b 0%, #e74c3c 100%);
+            width: 100%;
+            transition: width 0.4s ease;
+        }
 
-        .hp-text {
-            position: absolute;
-            width: 100%;
-            text-align: center;
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: #fff;
-            top: 0;
-            line-height: 16px;
-        }
+        .hp-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #fff;
+            top: 0;
+            line-height: 16px;
+        }
 
-        /* 카드 선택형 UI (아침/점심/저녁용) */
-        .card-selection {
-            display: flex;
-            justify-content: space-around;
-            gap: 15px;
-            margin: 25px 0;
-        }
+        /* 카드 선택형 UI (아침/점심/저녁용) */
+        .card-selection {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+            margin: 25px 0;
+        }
 
-        .select-card {
-            flex: 1;
-            aspect-ratio: 3/4;
-            background: #1c1c24;
-            border: 2px solid #555;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 2.5rem;
-        }
+        .select-card {
+            flex: 1;
+            aspect-ratio: 3/4;
+            background: #1c1c24;
+            border: 2px solid #555;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 2.5rem;
+        }
 
-        .select-card:hover {
-            border-color: var(--primary-color);
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
-        }
+        .select-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+        }
 
-        .card-label {
-            font-size: 0.9rem;
-            color: #ccc;
-            margin-top: 10px;
-        }
+        .card-label {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-top: 10px;
+        }
 
-        /* 결과 연출 구역 */
-        .narrative-box {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 8px;
-            min-height: 100px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+        /* 결과 연출 구역 */
+        .narrative-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 100px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-        .narrative-text {
-            font-size: 1.15rem;
-            line-height: 1.6;
-            text-align: center;
-        }
+        .narrative-text {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            text-align: center;
+        }
 
-        /* 업무 선택 메뉴 (집무실 1인칭용) */
-        .work-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
+        /* 업무 선택 메뉴 (집무실 1인칭용) */
+        .work-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
 
-        .work-card {
-            background: rgba(20, 20, 28, 0.9);
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+        .work-card {
+            background: rgba(20, 20, 28, 0.9);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-        .work-card:hover {
-            border-color: var(--primary-color);
-            background: rgba(212, 175, 55, 0.1);
-        }
+        .work-card:hover {
+            border-color: var(--primary-color);
+            background: rgba(212, 175, 55, 0.1);
+        }
 
-        .work-card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
+        .work-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
 
-        .work-card p {
-            font-size: 0.8rem;
-            color: #aaa;
-        }
+        .work-card p {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
 
-        /* 모달 세부 행동 구역 */
-        .detail-panel {
-            background: #14141c;
-            border: 2px solid var(--primary-color);
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
-            display: none;
-        }
+        /* 모달 세부 행동 구역 */
+        .detail-panel {
+            background: #14141c;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
 
-        .detail-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
 
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
 
-        /* 카지노 룰렛 전용 */
-        .roulette-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-            margin-top: 15px;
-        }
+        /* 카지노 룰렛 전용 */
+        .roulette-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            margin-top: 15px;
+        }
 
-        .bet-buttons {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
+        .bet-buttons {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
 
-        .bet-btn {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #777;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            color: white;
-            transition: transform 0.2s;
-        }
-        
-        .bet-btn:hover { transform: scale(1.05); }
+        .bet-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #777;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
 
-        .bet-red { background: #c0392b; }
-        .bet-black { background: #2c3e50; }
-        .bet-green { background: #27ae60; border-color: var(--primary-color); }
+        .bet-red { background: #c0392b; }
+        .bet-black { background: #2c3e50; }
+        .bet-green { background: #27ae60; border-color: var(--primary-color); }
 
-        /* 헬퍼 클래스 */
-        .hidden { display: none !important; }
-        .red-text { color: var(--danger-color); font-weight: bold; }
-        .gold-text { color: var(--primary-color); font-weight: bold; }
-        .shake { animation: shakeEffect 0.5s; }
+        .bet-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 5px;
+        }
 
-        @keyframes shakeEffect {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-10px); }
-            40%, 80% { transform: translateX(10px); }
-        }
-    </style>
+        /* 헬퍼 클래스 */
+        .hidden { display: none !important; }
+        .red-text { color: var(--danger-color); font-weight: bold; }
+        .gold-text { color: var(--primary-color); font-weight: bold; }
+        .shake { animation: shakeEffect 0.5s; }
+
+        @keyframes shakeEffect {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+    </style>
 </head>
 <body>
 
-    <div id="blood-overlay"></div>
-
-    <!-- 1. 첫 화면 (로그인 / 시작하기) -->
-    <div id="start-screen" class="container">
-        <h1>도파민 왕국: 확률의 군주</h1>
-        <p style="text-align: center; margin-bottom: 30px; color: #aaa;">"운명이 주사위 컵 안에서 춤을 춥니다. 통치하십시오. 도박으로."</p>
-        <button class="btn" onclick="showAuthForm('register')">🏰 국정 운영 시작하기 (신규 군주)</button>
-        <button class="btn" onclick="showAuthForm('login')">📜 국정 운영 이어하기 (이전 군주)</button>
-    </div>
-
-    <!-- 2. 회원가입 및 로그인 폼 양식 -->
-    <div id="auth-screen" class="container hidden">
-        <h2 id="auth-title">군주 등록 서약서</h2>
-        
-        <div id="register-fields">
-            <div class="form-group">
-                <label>국호 정하기</label>
-                <div class="input-suffix-group">
-                    <input type="text" id="reg-country" placeholder="예: 도파민" maxlength="15">
-                    <span>왕국</span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>성별 및 작위</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="reg-gender" value="왕" checked> 국왕 (왕)</label>
-                    <label><input type="radio" name="reg-gender" value="여왕"> 여왕</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>존함 (호칭)</label>
-            <input type="text" id="auth-username" placeholder="예: 레오폴드" maxlength="15">
-        </div>
-
-        <div class="form-group">
-            <label>옥새 암호 (비밀번호)</label>
-            <input type="password" id="auth-password" placeholder="비밀번호 입력">
-        </div>
-
-        <button class="btn" id="auth-submit-btn" onclick="handleAuthSubmit()">인장 찍기</button>
-        <button class="btn" style="border-color:#555; color:#aaa; margin-top:10px;" onclick="backToMain()">뒤로가기</button>
-    </div>
-
-    <!-- 3. 메인 게임 화면 -->
-    <div id="game-screen" class="container hidden">
-        <!-- 상단 스탯 인터페이스 -->
-        <div class="status-bar">
-            <div class="stat-item" style="grid-column: span 3; font-weight: bold; border-color: var(--primary-color);">
-                <span id="display-title" class="gold-text">국가 정보</span> | 
-                <span id="display-day" class="gold-text">제 1일 차</span> 
-                (<span id="display-time">아침</span>)
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">💰 국고</div>
-                <div id="stat-gold" class="stat-val">1000g</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">⚔️ 군사력</div>
-                <div id="stat-military" class="stat-val">100</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">👥 민심 / 인구</div>
-                <div id="stat-happiness" class="stat-val" style="font-size: 0.9rem;">80% (10000명)</div>
-            </div>
-            <div class="hp-bar-container">
-                <div id="stat-hp-bar" class="hp-bar"></div>
-                <div id="stat-hp-text" class="hp-text">체력 100 / 100</div>
-            </div>
-        </div>
-
-        <!-- 중앙 이벤트 이야기 구역 -->
-        <div class="narrative-box">
-            <p id="narrative-desc" class="narrative-text">로딩 중...</p>
-        </div>
-
-        <!-- [아침 단계] 러시안 룰렛 구역 -->
-        <div id="morning-phase" class="phase-container hidden">
-            <div class="card-selection">
-                <div class="select-card" onclick="triggerRussianRoulette(0)">🔫<span class="card-label">첫 번째 총</span></div>
-                <div class="select-card" onclick="triggerRussianRoulette(1)">🔫<span class="card-label">두 번째 총</span></div>
-                <div class="select-card" onclick="triggerRussianRoulette(2)">🔫<span class="card-label">세 번째 총</span></div>
-            </div>
-        </div>
-
-        <!-- [점심/저녁 단계] 독살 피하기 식사 구역 -->
-        <div id="meal-phase" class="phase-container hidden">
-            <div class="card-selection">
-                <div class="select-card" onclick="triggerDining(0)">🍲<span class="card-label">호화로운 탕</span></div>
-                <div class="select-card" onclick="triggerDining(1)">🍖<span class="card-label">잘 구워진 바비큐</span></div>
-                <div class="select-card" onclick="triggerDining(2)">🍇<span class="card-label">신선한 과일 플래터</span></div>
-            </div>
-        </div>
-
-        <!-- [업무 진입 대기 단계] -->
-        <div id="ready-phase" class="phase-container hidden">
-            <button class="btn" onclick="startOfficeHours()">📜 업무 집무실로 입장하기</button>
-        </div>
-
-        <!-- [집무실 단계] 4대 카테고리 업무 구역 -->
-        <div id="office-phase" class="phase-container hidden">
-            <h3 style="margin-bottom: 10px;">어전 회의 집무 테이블</h3>
-            <p style="text-align: center; font-size: 0.9rem; color: #aaa; margin-bottom: 15px;">
-                선택한 정책이 국가의 존망을 결정합니다. (남은 업무 횟수: <span id="work-countdown" class="gold-text">5</span>/5)
-            </p>
-            <div class="work-grid">
-                <div class="work-card" onclick="openWorkDetail('military')">
-                    <h3>⚔️ 군사 강화</h3>
-                    <p>군비 도박 시뮬레이터</p>
-                </div>
-                <div class="work-card" onclick="openWorkDetail('finance')">
-                    <h3>💰 재정 카지노</h3>
-                    <p>국고 베팅 룰렛 회전판</p>
-                </div>
-                <div class="work-card" onclick="openWorkDetail('public')">
-                    <h3>👥 민심 구휼 복지</h3>
-                    <p>공공시설 대강화 시도</p>
-                </div>
-                <div class="work-card" onclick="openWorkDetail('diplomacy')">
-                    <h3>🗺️ 외교 및 확장</h3>
-                    <p>침략 도박 또는 해외 무역</p>
-                </div>
-            </div>
-
-            <!-- 세부 업무 모달 패널 -->
-            <div id="detail-panel" class="detail-panel">
-                <div class="detail-header">
-                    <h3 id="detail-title">상세 계획안</h3>
-                    <button class="close-btn" onclick="closeWorkDetail()">×</button>
-                </div>
-                <div id="detail-content">
-                    <!-- 스크립트로 동작 제어 동적 변경 -->
-                </div>
-            </div>
-        </div>
-
-        <!-- [밤 체력 단련 단계] -->
-        <div id="night-phase" class="phase-container hidden">
-            <p style="text-align: center; margin-bottom: 15px;">하루의 업무를 모두 마쳤습니다. 취침 전 체력을 강화하시겠습니까?</p>
-            <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px dashed rgba(212,175,55,0.4)">
-                <strong>💪 심야 강도 단련</strong><br>
-                비용: <span class="gold-text">200g</span> | 성공률: <span class="gold-text">50%</span><br>
-                <span style="font-size:0.85rem; color:#aaa;">성공 시 최대 체력 <strong>+20</strong> 증가, 실패 시 단련 중 부상으로 체력 <strong>-10</strong> 손실</span>
-            </div>
-            <button class="btn" onclick="tryNightTraining()">체력 훈련 시작하기</button>
-            <button class="btn" style="border-color:#555; color:#aaa;" onclick="goToSleep()">훈련 없이 취침하기</button>
-        </div>
-
-        <!-- [결과 통보 및 대기 버튼] -->
-        <div id="next-action-container" class="hidden" style="margin-top: 15px;">
-            <button class="btn" id="next-action-btn" onclick="progressGame()">계속 진행</button>
-        </div>
-    </div>
-
-    <!-- 4. 게임 오버 화면 -->
-    <div id="gameover-screen" class="container hidden">
-        <h1 class="red-text" style="font-size: 3rem; margin-bottom: 10px;">국가 함락</h1>
-        <p id="gameover-reason" style="font-size: 1.2rem; margin-bottom: 25px; text-align: center;"></p>
-        
-        <div style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: left; line-height: 1.8;">
-            <h3 class="gold-text">최종 통치 기록</h3>
-            <p>👑 군주 존함: <span id="go-name"></span></p>
-            <p>🏰 다스린 국가: <span id="go-country"></span></p>
-            <p>⏳ 생존 일수: <span id="go-days"></span>일 차</p>
-            <p>💰 최종 국고: <span id="go-gold"></span>g</p>
-            <p>⚔️ 최종 군사: <span id="go-military"></span></p>
-            <p>👥 최종 만족도: <span id="go-happiness"></span></p>
-        </div>
-        <button class="btn" onclick="restartGame()">새로운 기회로 가기</button>
-    </div>
-
-    <script>
-        // --- 전역 시스템 상태 관리 ---
-        let currentMode = 'register'; 
-        let currentUser = null; 
-        let targetNextPhase = ''; // 페이즈 전환 트리거 
-        
-        // 지루함을 줄이기 위해 타임당 업무 횟수를 5로 조정
-        const TASKS_PER_SESSION = 5; 
-
-        // 기본 초기 스탯 세팅값
-        const DEFAULT_STATE = {
-            day: 1,
-            phase: 'morning', 
-            timeOfDay: 'AM', // 'AM' (오전 집무 전) or 'PM' (오후 집무 전)
-            gold: 1000,
-            military: 100,
-            happiness: 80,
-            population: 10000,
-            hp: 100,
-            maxHp: 100,
-            officeCount: TASKS_PER_SESSION 
-        };
-
-        const BACKGROUNDS = {
-            start: "linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1540324155974-7523202daa3f?auto=format&fit=crop&q=80&w=1000')", 
-            morning: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1000')", 
-            dining: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=1000')", 
-            office: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1565538420870-da08ff96a207?auto=format&fit=crop&q=80&w=1000')", 
-            night: "linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?auto=format&fit=crop&q=80&w=1000')" 
-        };
-
-        // --- 로그인 및 세션 관리 엔진 ---
-        function showAuthForm(mode) {
-            currentMode = mode;
-            document.getElementById('start-screen').classList.add('hidden');
-            document.getElementById('auth-screen').classList.remove('hidden');
-            
-            const title = document.getElementById('auth-title');
-            const regFields = document.getElementById('register-fields');
-            const submitBtn = document.getElementById('auth-submit-btn');
-
-            if (mode === 'register') {
-                title.textContent = "군주 연대기 등록 서약서";
-                regFields.classList.remove('hidden');
-                submitBtn.textContent = "왕국 창설 및 등극";
-            } else {
-                title.textContent = "기존 국가 인장 봉인 해제";
-                regFields.classList.add('hidden');
-                submitBtn.textContent = "국정 이어하기";
-            }
-        }
-
-        function backToMain() {
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('start-screen').classList.remove('hidden');
-        }
-
-        function handleAuthSubmit() {
-            const username = document.getElementById('auth-username').value.trim();
-            const password = document.getElementById('auth-password').value;
-
-            if(!username || !password) {
-                alert("존함과 옥새 암호를 정확하게 기입해주십시오.");
-                return;
-            }
-
-            if (currentMode === 'register') {
-                const countryInput = document.getElementById('reg-country').value.trim();
-                const gender = document.querySelector('input[name="reg-gender"]:checked').value;
-
-                if(!countryInput) {
-                    alert("건설할 나라 이름을 입력하십시오.");
-                    return;
-                }
-
-                const countryFullName = countryInput + " 왕국";
-
-                if (localStorage.getItem(`user_${username}`)) {
-                    alert("이미 해당 존함으로 등록된 연대기가 존재합니다. 다른 이름을 사용하십시오.");
-                    return;
-                }
-
-                currentUser = {
-                    username: username,
-                    password: password,
-                    country: countryFullName,
-                    gender: gender,
-                    title: `${username} 전하`,
-                    gameState: JSON.parse(JSON.stringify(DEFAULT_STATE)) 
-                };
-
-                saveUserData();
-                alert(`${countryFullName}의 탄생을 축하드립니다, ${currentUser.title}!`);
-                enterGame();
-
-            } else {
-                const savedData = localStorage.getItem(`user_${username}`);
-                if (!savedData) {
-                    alert("존재하지 않는 군주 존함입니다.");
-                    return;
-                }
-                const parsedUser = JSON.parse(savedData);
-                if (parsedUser.password !== password) {
-                    alert("옥새 암호(비밀번호)가 일치하지 않습니다.");
-                    return;
-                }
-                currentUser = parsedUser;
-                alert(`다시 오신 것을 환영합니다, ${currentUser.title}!`);
-                enterGame();
-            }
-        }
-
-        function saveUserData() {
-            if (currentUser) {
-                localStorage.setItem(`user_${currentUser.username}`, JSON.stringify(currentUser));
-            }
-        }
-
-        function applyBackground(key) {
-            document.body.style.backgroundImage = BACKGROUNDS[key] || BACKGROUNDS['start'];
-        }
-
-        // --- 게임 내부 로직 진입 ---
-        function enterGame() {
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('start-screen').classList.add('hidden');
-            document.getElementById('game-screen').classList.remove('hidden');
-            
-            document.getElementById('display-title').textContent = `${currentUser.country} | ${currentUser.title}`;
-            
-            updateUI();
-            startCurrentPhase();
-        }
-
-        function updateUI() {
-            const state = currentUser.gameState;
-            
-            document.getElementById('stat-gold').textContent = state.gold + "g";
-            document.getElementById('stat-military').textContent = state.military;
-            document.getElementById('stat-happiness').textContent = `${state.happiness}% (${state.population}명)`;
-            document.getElementById('display-day').textContent = `제 ${state.day}일 차`;
-
-            let phaseKOR = "아침";
-            if (state.phase.includes('lunch')) phaseKOR = "점심 식사";
-            else if (state.phase.includes('dinner')) phaseKOR = "저녁 식사";
-            else if (state.phase === 'office') phaseKOR = state.timeOfDay === 'AM' ? "오전 집무" : "오후 집무";
-            else if (state.phase === 'ready') phaseKOR = state.timeOfDay === 'AM' ? "오전 집무 대기" : "오후 집무 대기";
-            else if (state.phase === 'night') phaseKOR = "야간 단련";
-            
-            document.getElementById('display-time').textContent = phaseKOR;
-
-            const hpPercent = (state.hp / state.maxHp) * 100;
-            document.getElementById('stat-hp-bar').style.width = `${Math.max(0, hpPercent)}%`;
-            document.getElementById('stat-hp-text').textContent = `체력 ${state.hp} / ${state.maxHp}`;
-
-            if (state.gold < 200 || state.military < 30) {
-                state.happiness = Math.max(0, state.happiness - 1);
-            }
-
-            checkDefeatConditions();
-        }
-
-        // --- 페이즈 컨트롤러 ---
-        function setupNextActionButton(text, nextPhase) {
-            targetNextPhase = nextPhase;
-            document.getElementById('next-action-btn').textContent = text;
-            document.getElementById('next-action-container').classList.remove('hidden');
-        }
-
-        function progressGame() {
-            if (targetNextPhase) {
-                currentUser.gameState.phase = targetNextPhase;
-            }
-            startCurrentPhase();
-        }
-
-        function startCurrentPhase() {
-            const state = currentUser.gameState;
-            
-            document.getElementById('morning-phase').classList.add('hidden');
-            document.getElementById('meal-phase').classList.add('hidden');
-            document.getElementById('ready-phase').classList.add('hidden');
-            document.getElementById('office-phase').classList.add('hidden');
-            document.getElementById('night-phase').classList.add('hidden');
-            document.getElementById('next-action-container').classList.add('hidden');
-            closeWorkDetail();
-
-            if (state.phase === 'morning') {
-                applyBackground('morning');
-                document.getElementById('narrative-desc').innerHTML = `🌅 <strong>새 아침이 밝았습니다, ${currentUser.title}.</strong><br>왕위에 앉은 자는 항상 의문사를 조심해야 합니다. 눈앞에 비치된 3정의 총 중 하나를 고르십시오. <strong>딱 한 군데에만 진짜 총알이 장전되어 있습니다.</strong>`;
-                document.getElementById('morning-phase').classList.remove('hidden');
-            } 
-            else if (state.phase === 'ready') {
-                applyBackground('morning');
-                document.getElementById('narrative-desc').innerHTML = `🚶‍♂️ <strong>어전으로 향합니다.</strong><br>이제 국가 통치를 위한 결단을 내릴 시간입니다.`;
-                document.getElementById('ready-phase').classList.remove('hidden');
-            }
-            else if (state.phase === 'office') {
-                applyBackground('office');
-                document.getElementById('narrative-desc').innerHTML = `✍️ <strong>집무실 업무 개시</strong><br>책상 앞에 앉았습니다. 산적해 있는 국정 과제들을 선택해 신속히 집행하십시오. 매사 도박에 의한 결과가 따릅니다.`;
-                document.getElementById('office-phase').classList.remove('hidden');
-                document.getElementById('work-countdown').textContent = state.officeCount;
-            }
-            else if (state.phase === 'lunch_ready') {
-                applyBackground('dining');
-                document.getElementById('narrative-desc').innerHTML = `🔔 <strong>오전 집무가 끝났습니다.</strong><br>기력을 보충하기 위해 수라상 점심 식사를 들 시간입니다. 주방장들 중 독살범이 숨어있을 수 있습니다. <strong>3개의 요리 중 하나에는 맹독이 들어있습니다.</strong>`;
-                document.getElementById('meal-phase').classList.remove('hidden');
-            }
-            else if (state.phase === 'dinner_ready') {
-                applyBackground('dining');
-                document.getElementById('narrative-desc').innerHTML = `🔔 <strong>오후 집무를 모두 완수하셨습니다.</strong><br>하루를 갈무리하는 만찬 저녁 식사 시간입니다. <strong>마찬가지로 3가지 음식 중 하나의 요리엔 치명적인 독이 주입되어 있습니다.</strong>`;
-                document.getElementById('meal-phase').classList.remove('hidden');
-            }
-            else if (state.phase === 'night') {
-                applyBackground('night');
-                document.getElementById('narrative-desc').innerHTML = `🕯️ <strong>어스름한 야간 시간이 되었습니다.</strong><br>침소에 들기 전, 독살 및 총격을 견뎌내기 위해 비전 단련서로 육체 체력을 한 차례 강화 연마할 수 있습니다.`;
-                document.getElementById('night-phase').classList.remove('hidden');
-            }
-            
-            updateUI();
-        }
-
-        // --- 세부 이벤트 로직 ---
-        function triggerRussianRoulette(cardIndex) {
-            document.getElementById('morning-phase').classList.add('hidden');
-            const bulletIndex = Math.floor(Math.random() * 3); 
-            const state = currentUser.gameState;
-
-            if (cardIndex === bulletIndex) {
-                flashBloodScreen();
-                const damage = 100; 
-                state.hp = Math.max(0, state.hp - damage);
-                document.getElementById('narrative-desc').innerHTML = `<span class="red-text">💥 타아앙!!!</span><br>탄환이 몸을 관통하는 고통이 엄습합니다! <span class="red-text">체력 100 소실!</span> 간신히 치명적인 충격을 버텨냈거나 눈앞이 가물거립니다.`;
-            } else {
-                document.getElementById('narrative-desc').innerHTML = `⚙️ <em>틱... 가벼운 쇳소리만 울립니다.</em><br>허공을 갈랐습니다. 신이 당신을 점지하셨군요. 무사히 침대를 벗어납니다.`;
-            }
-
-            saveUserData();
-            updateUI();
-            
-            if (state.hp > 0) {
-                setupNextActionButton('오전 국정 집무실 입장', 'ready');
-            }
-        }
-
-        function triggerDining(cardIndex) {
-            document.getElementById('meal-phase').classList.add('hidden');
-            const poisonIndex = Math.floor(Math.random() * 3); 
-            const state = currentUser.gameState;
-
-            if (cardIndex === poisonIndex) {
-                flashBloodScreen();
-                const damage = 50; 
-                state.hp = Math.max(0, state.hp - damage);
-                document.getElementById('narrative-desc').innerHTML = `<span class="red-text">🤢 으윽...!</span><br>가슴에 칼을 찌르는 듯한 강렬한 산독 통증이 터져 나옵니다! 독입니다! <span class="red-text">체력 50 소실.</span>`;
-            } else {
-                const heal = 30; 
-                const oldHp = state.hp;
-                state.hp = Math.min(state.maxHp, state.hp + heal);
-                const actualHeal = state.hp - oldHp;
-                document.getElementById('narrative-desc').innerHTML = `😋 <strong>아주 훌륭하고 만족스러운 수라상이었습니다.</strong><br>독약은 없었습니다. 안전하게 포만감을 느끼며 기운을 되찾습니다. <span class="gold-text">체력 +${actualHeal} 회복!</span>`;
-            }
-
-            saveUserData();
-            updateUI();
-
-            if (state.hp > 0) {
-                if (state.phase === 'lunch_ready') {
-                    state.timeOfDay = 'PM'; // 오후 전환
-                    setupNextActionButton('오후 국정 집무실 입장', 'ready');
-                } else {
-                    setupNextActionButton('야간 수련 단계로 이동', 'night');
-                }
-            }
-        }
-
-        function startOfficeHours() {
-            const state = currentUser.gameState;
-            state.officeCount = TASKS_PER_SESSION; 
-            state.phase = 'office';
-            startCurrentPhase();
-        }
-
-        // --- 집무실 1인칭 업무 세부 열기 시스템 ---
-        function openWorkDetail(category) {
-            const panel = document.getElementById('detail-panel');
-            const title = document.getElementById('detail-title');
-            const content = document.getElementById('detail-content');
-
-            panel.style.display = 'block';
-
-            if (category === 'military') {
-                title.textContent = "⚔️ 왕실 무기고 군비 강화 정책";
-                content.innerHTML = `
-                    <p style="margin-bottom:10px; font-size:0.9rem;">비용 <strong class="gold-text">50g</strong>를 투입해 상비군 장비를 확률 단련 강화합니다.</p>
-                    <p style="margin-bottom:15px; font-size:0.85rem; color:#aaa;">성공률: <strong class="gold-text">65%</strong><br>성공: 군사력 +15 증가<br>실패: 군사 장비 무기 유실로 군사력 -20 감소</p>
-                    <button class="btn" onclick="executeWork('military')">단련 집행하기</button>
-                `;
-            }
-            else if (category === 'finance') {
-                title.textContent = "💰 재정 카지노 룰렛";
-                content.innerHTML = `
-                    <p style="margin-bottom:10px; font-size:0.9rem;">국고를 베팅해 룰렛을 돌립니다. (최소 10g)</p>
-                    <div class="roulette-container">
-                        <input type="number" id="bet-amount" placeholder="베팅 금액 입력" style="width:100%; padding:8px; background:#1a1a24; color:white; border:1px solid #d4af37;">
-                        <div class="bet-buttons">
-                            <button class="bet-btn bet-red" onclick="executeWork('finance', 'red')">RED<br>x2 (45%)</button>
-                            <button class="bet-btn bet-black" onclick="executeWork('finance', 'black')">BLACK<br>x2 (45%)</button>
-                            <button class="bet-btn bet-green" onclick="executeWork('finance', 'green')">GREEN<br>x10 (10%)</button>
-                        </div>
-                    </div>
-                `;
-            }
-            else if (category === 'public') {
-                title.textContent = "👥 민심 구휼 복지";
-                content.innerHTML = `
-                    <p style="margin-bottom:10px; font-size:0.9rem;">국고 <strong class="gold-text">100g</strong>를 풀어 백성을 구제합니다.</p>
-                    <p style="margin-bottom:15px; font-size:0.85rem; color:#aaa;">성공률: <strong class="gold-text">80%</strong><br>성공: 민심 +10% 증가<br>실패: 관리들의 횡령으로 민심 -5% 하락</p>
-                    <button class="btn" onclick="executeWork('public')">구휼금 하사하기 (100g)</button>
-                `;
-            }
-            else if (category === 'diplomacy') {
-                title.textContent = "🗺️ 외교 및 확장 (침략 전쟁)";
-                content.innerHTML = `
-                    <p style="margin-bottom:10px; font-size:0.9rem;">군사력을 동원해 이웃 국가의 자원을 약탈합니다.</p>
-                    <p style="margin-bottom:15px; font-size:0.85rem; color:#aaa;">승률: <strong class="gold-text">50%</strong><br>승리: 국고 +300g 획득<br>패배: 군사력 -30 감소, 민심 -10% 하락</p>
-                    <button class="btn" onclick="executeWork('diplomacy')">전쟁 선포</button>
-                `;
-            }
-        }
-
-        function closeWorkDetail() {
-            document.getElementById('detail-panel').style.display = 'none';
-        }
-
-        function executeWork(category, param) {
-            const state = currentUser.gameState;
-            if (state.officeCount <= 0) return;
-
-            let desc = "";
-
-            if (category === 'military') {
-                if (state.gold < 50) { alert("국고가 부족합니다."); return; }
-                state.gold -= 50;
-                if (Math.random() < 0.65) {
-                    state.military += 15;
-                    desc = "대장장이의 피땀 어린 노력으로 <strong class='gold-text'>무기 강화에 성공</strong>했습니다! (군사력 +15)";
-                } else {
-                    state.military = Math.max(0, state.military - 20);
-                    desc = "어리석은 단련으로 <strong class='red-text'>장비가 파손</strong>되었습니다! (군사력 -20)";
-                }
-            } 
-            else if (category === 'finance') {
-                const betInput = document.getElementById('bet-amount').value;
-                const betAmount = parseInt(betInput);
-                if (isNaN(betAmount) || betAmount < 10) { alert("최소 10g 이상을 베팅해야 합니다."); return; }
-                if (state.gold < betAmount) { alert("국고가 부족합니다."); return; }
-                
-                state.gold -= betAmount;
-                const roll = Math.random() * 100;
-                let won = false;
-                let multiplier = 0;
-                
-                if (param === 'green' && roll <= 10) { won = true; multiplier = 10; }
-                else if (param === 'red' && roll > 10 && roll <= 55) { won = true; multiplier = 2; }
-                else if (param === 'black' && roll > 55) { won = true; multiplier = 2; }
-                
-                if (won) {
-                    const prize = betAmount * multiplier;
-                    state.gold += prize;
-                    desc = `빙고! <strong class='gold-text'>${param.toUpperCase()} 적중!</strong> ${prize}g를 거두어들였습니다!`;
-                } else {
-                    desc = `<strong class='red-text'>도박 실패!</strong> 딜러가 베팅금 ${betAmount}g를 전부 쓸어갑니다.`;
-                }
-            }
-            else if (category === 'public') {
-                if (state.gold < 100) { alert("국고가 부족합니다."); return; }
-                state.gold -= 100;
-                if (Math.random() < 0.80) {
-                    state.happiness = Math.min(100, state.happiness + 10);
-                    desc = "백성들이 성군의 은혜에 감격하며 칭송합니다! <strong class='gold-text'>(민심 +10%)</strong>";
-                } else {
-                    state.happiness = Math.max(0, state.happiness - 5);
-                    desc = "부패한 지방 관리들이 구휼금을 중간에 가로챘습니다! <strong class='red-text'>(민심 -5%)</strong>";
-                }
-            }
-            else if (category === 'diplomacy') {
-                if (Math.random() < 0.5) {
-                    state.gold += 300;
-                    desc = "승전보가 울립니다! 이웃 국가를 약탈해 <strong class='gold-text'>전리품 300g</strong>를 획득했습니다.";
-                } else {
-                    state.military = Math.max(0, state.military - 30);
-                    state.happiness = Math.max(0, state.happiness - 10);
-                    desc = "<strong class='red-text'>대패했습니다!</strong> 군대는 궤멸되었고 민심이 흉흉해집니다. (군사력 -30, 민심 -10%)";
-                }
-            }
-
-            state.officeCount--;
-            closeWorkDetail();
-            
-            document.getElementById('work-countdown').textContent = state.officeCount;
-            document.getElementById('narrative-desc').innerHTML = `📝 <strong>결재 결과</strong><br>${desc}`;
-            
-            updateUI();
-            saveUserData();
-
-            // 모든 업무 소진 시 다음 페이즈로
-            if (state.officeCount <= 0) {
-                document.getElementById('office-phase').classList.add('hidden');
-                if (state.timeOfDay === 'AM') {
-                    setupNextActionButton('오전 집무 종료 및 오찬장으로 이동', 'lunch_ready');
-                } else {
-                    setupNextActionButton('오후 집무 종료 및 만찬장으로 이동', 'dinner_ready');
-                }
-            }
-        }
-
-        // --- 야간 단련 및 취침 로직 ---
-        function tryNightTraining() {
-            const state = currentUser.gameState;
-            if (state.gold < 200) { alert("국고가 부족합니다."); return; }
-            state.gold -= 200;
-
-            if (Math.random() < 0.5) {
-                state.maxHp += 20;
-                state.hp = Math.min(state.maxHp, state.hp + 20);
-                document.getElementById('narrative-desc').innerHTML = `💪 <strong>단련 성공!</strong><br>극한의 고통을 이겨내고 육체가 한 단계 강화되었습니다. <strong class='gold-text'>(최대 체력 +20)</strong>`;
-            } else {
-                state.hp = Math.max(0, state.hp - 10);
-                flashBloodScreen();
-                document.getElementById('narrative-desc').innerHTML = `<span class="red-text">🦴 단련 실패!</span><br>무리한 기공 수련으로 내상을 입어 피를 토했습니다. <strong class='red-text'>(체력 -10)</strong>`;
-            }
-            
-            document.getElementById('night-phase').classList.add('hidden');
-            updateUI();
-            saveUserData();
-
-            if (state.hp > 0) {
-                setupNextActionButton('잠자리에 들기', 'next_day');
-            }
-        }
-
-        function goToSleep() {
-            document.getElementById('night-phase').classList.add('hidden');
-            document.getElementById('narrative-desc').innerHTML = `🛏️ <strong>깊은 잠에 빠집니다...</strong><br>무사히 하루를 넘겼습니다. 내일은 또 어떤 암살의 위협이 기다리고 있을까요?`;
-            setupNextActionButton('다음 날 아침으로', 'next_day');
-        }
-
-        // --- 패배 판정 및 게임 오버 제어 ---
-        function checkDefeatConditions() {
-            const state = currentUser.gameState;
-            let reason = "";
-
-            if (state.hp <= 0) reason = "반복된 피격과 독살, 건강 악화로 결국 승하하셨습니다.";
-            else if (state.happiness <= 0) reason = "민심이 완전히 돌아서 성난 폭도들의 반란으로 단두대에서 처형당했습니다.";
-            else if (state.military <= 0) reason = "국가를 방어할 군사력이 소멸하여 이웃 국가의 침략으로 왕국이 불타 멸망했습니다.";
-
-            if (reason) {
-                // 게임 오버 처리
-                document.getElementById('game-screen').classList.add('hidden');
-                document.getElementById('gameover-screen').classList.remove('hidden');
-                document.getElementById('gameover-reason').textContent = reason;
-                
-                document.getElementById('go-name').textContent = currentUser.title;
-                document.getElementById('go-country').textContent = currentUser.country;
-                document.getElementById('go-days').textContent = state.day;
-                document.getElementById('go-gold').textContent = state.gold;
-                document.getElementById('go-military').textContent = state.military;
-                document.getElementById('go-happiness').textContent = `${state.happiness}%`;
-                
-                // 죽으면 영구적 사망 처리 (세이브 삭제)
-                localStorage.removeItem(`user_${currentUser.username}`);
-            }
-
-            // 다음 날짜로 넘어갈 때의 특수 페이즈 전환 트리거 감지
-            if (targetNextPhase === 'next_day') {
-                targetNextPhase = '';
-                state.day++;
-                state.timeOfDay = 'AM';
-                state.phase = 'morning';
-                saveUserData();
-                setTimeout(() => { startCurrentPhase(); }, 1500); // 딜레이를 주어 아침으로 부드럽게 넘어감
-            }
-        }
-
-        function restartGame() {
-            location.reload();
-        }
-
-        function flashBloodScreen() {
-            const overlay = document.getElementById('blood-overlay');
-            overlay.style.opacity = '1';
-            document.body.classList.add('shake');
-            setTimeout(() => {
-                overlay.style.opacity = '0';
-                document.body.classList.remove('shake');
-            }, 500);
-        }
-
-    </script>
-</body>
-</html>
+    <div id="blood-overlay"></div>
+
+    <!-- 1. 첫 화면 (로그인 / 시작하기) -->
+    <div id="start-screen" class="container">
+        <h1>도파민 왕국: 확률의 군주</h1>
+        <p style="text-align: center; margin-bottom: 30px; color: #aaa;">"운명이 주사위 컵 안에서 춤을 춥니다. 통치하십시오. 도박으로."</p>
+        <button class="btn" onclick="showAuthForm('register')">🏰 국정 운영 시작하기 (신규 군주)</button>
+        <button class="btn" onclick="showAuthForm('login')">📜 국정 운영 이어하기 (이전 군주)</button>
+    </div>
+
+    <!-- 2. 회원가입 및 로그인 폼 양식 -->
+    <div id="auth-screen" class="container hidden">
+        <h2 id="auth-title">군주 등록 서약서</h2>
+        
+        <div id="register-fields">
+            <div class="form-group">
+                <label>국호 정하기</label>
+                <div class="input-suffix-group">
+                    <input type="text" id="reg-country" placeholder="예: 도파민" maxlength="15">
+                    <span>왕국</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>성별 및 작위</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="reg-gender" value="왕" checked> 국왕 (왕)</label>
+                    <label><input type="radio" name="reg-gender" value="여왕"> 여왕</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>존함 (호칭)</label>
+            <input type="text" id="auth-username" placeholder="예: 레오폴드" maxlength="15">
+        </div>
+
+        <div class="form-group">
+            <label>옥새 암호 (비밀번호)</label>
+            <input type="password" id="auth-password" placeholder="비밀번호 입력">
+        </div>
+
+        <button class="btn" id="auth-submit-btn" onclick="handleAuthSubmit()">인장 찍기</button>
+        <button class="btn" style="border-color:#555; color:#aaa; margin-top:10px;" onclick="backToMain()">뒤로가기</button>
+    </div>
+
+    <!-- 3. 메인 게임 화면 -->
+    <div id="game-screen" class="container hidden">
+        <!-- 상단 스탯 인터페이스 -->
+        <div class="status-bar">
+            <div class="stat-item" style="grid-column: span 3; font-weight: bold; border-color: var(--primary-color);">
+                <span id="display-title" class="gold-text">국가 정보</span> | 
+                <span id="display-day" class="gold-text">제 1일 차</span> 
+                (<span id="display-time">아침</span>)
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">💰 국고</div>
+                <div id="stat-gold" class="stat-val">1000g</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">⚔️ 군사력</div>
+                <div id="stat-military" class="stat-val">100</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">👥 민심 / 인구</div>
+                <div id="stat-happiness" class="stat-val" style="font-size: 0.9rem;">80% (10000명)</div>
+            </div>
+            <div class="hp-bar-container">
+                <div id="stat-hp-bar" class="hp-bar"></div>
+                <div id="stat-hp-text" class="hp-text">체력 100 / 100</div>
+            </div>
+        </div>
+
+        <!-- 중앙 이벤트 이야기 구역 -->
+        <div class="narrative-box">
+            <p id="narrative-desc" class="narrative-text">로딩 중...</p>
+        </div>
+
+        <!-- [아침 단계] 러시안 룰렛 구역 -->
+        <div id="morning-phase" class="phase-container hidden">
+            <div class="card-selection">
+                <div class="select-card" onclick="triggerRussianRoulette(0)">🔫<span class="card-label">첫 번째 총</span></div>
+                <div class="select-card" onclick="triggerRussianRoulette(1)">🔫<span class="card-label">두 번째 총</span></div>
+                <div class="select-card" onclick="triggerRussianRoulette(2)">🔫<span class="card-label">세 번째 총</span></div>
+            </div>
+        </div>
+
+        <!-- [점심/저녁 단계] 독살 피하기 식사 구역 -->
+        <div id="meal-phase" class="phase-container hidden">
+            <div class="card-selection">
+                <div class="select-card" onclick="triggerDining(0)">🍲<span class="card-label">호화로운 탕</span></div>
+                <div class="select-card" onclick="triggerDining(1)">🍖<span class="card-label">잘 구워진 바비큐</span></div>
+                <div class="select-card" onclick="triggerDining(2)">🍇<span class="card-label">신선한 과일 플래터</span></div>
+            </div>
+        </div>
+
+        <!-- [업무 진입 대기 단계] -->
+        <div id="ready-phase" class="phase-container hidden">
+            <button class="btn" onclick="startOfficeHours()">📜 업무 집무실로 입장하기 (남은 업무: 10회)</button>
+        </div>
+
+        <!-- [집무실 단계] 4대 카테고리 업무 구역 -->
+        <div id="office-phase" class="phase-container hidden">
+            <h3 style="margin-bottom: 10px;">어전 회의 집무 테이블</h3>
+            <p style="text-align: center; font-size: 0.9rem; color: #aaa; margin-bottom: 15px;">
+                선택한 정책이 국가의 존망을 결정합니다. (남은 업무 횟수: <span id="work-countdown" class="gold-text">10</span>/10)
+            </p>
+            <div class="work-grid">
+                <div class="work-card" onclick="openWorkDetail('military')">
+                    <h3>⚔️ 군사 강화</h3>
+                    <p>군비 도박 시뮬레이터</p>
+                </div>
+                <div class="work-card" onclick="openWorkDetail('finance')">
+                    <h3>💰 재정 카지노</h3>
+                    <p>국고 베팅 룰렛 회전판</p>
+                </div>
+                <div class="work-card" onclick="openWorkDetail('public')">
+                    <h3>👥 민심 구휼 복지</h3>
+                    <p>공공시설 대강화 시도</p>
+                </div>
+                <div class="work-card" onclick="openWorkDetail('diplomacy')">
+                    <h3>🗺️ 외교 및 확장</h3>
+                    <p>침략 도박 또는 해외 무역</p>
+                </div>
+            </div>
+
+            <!-- 세부 업무 모달 패널 -->
+            <div id="detail-panel" class="detail-panel">
+                <div class="detail-header">
+                    <h3 id="detail-title">상세 계획안</h3>
+                    <button class="close-btn" onclick="closeWorkDetail()">×</button>
+                </div>
+                <div id="detail-content">
+                    <!-- 스크립트로 동작 제어 동적 변경 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- [밤 체력 단련 단계] -->
+        <div id="night-phase" class="phase-container hidden">
+            <p style="text-align: center; margin-bottom: 15px;">하루의 업무를 모두 마쳤습니다. 취침 전 체력을 강화하시겠습니까?</p>
+            <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px dashed rgba(212,175,55,0.4)">
+                <strong>💪 심야 강도 단련</strong><br>
+                비용: <span class="gold-text">200g</span> | 성공률: <span class="gold-text">50%</span><br>
+                <span style="font-size:0.85rem; color:#aaa;">성공 시 최대 체력 <strong>+20</strong> 증가, 실패 시 단련 중 부상으로 체력 <strong>-10</strong> 손실</span>
+            </div>
+            <button class="btn" onclick="tryNightTraining()">체력 훈련 시작하기</button>
+            <button class="btn" style="border-color:#555; color:#aaa;" onclick="goToSleep()">훈련 없이 취침하기</button>
+        </div>
+
+        <!-- [결과 통보 및 대기 버튼] -->
+        <div id="next-action-container" class="hidden" style="margin-top: 15px;">
+            <button class="btn" id="next-action-btn" onclick="progressGame()">계속 진행</button>
+        </div>
+    </div>
+
+    <!-- 4. 게임 오버 화면 -->
+    <div id="gameover-screen" class="container hidden">
+        <h1 class="red-text" style="font-size: 3rem; margin-bottom: 10px;">국가 함락</h1>
+        <p id="gameover-reason" style="font-size: 1.2rem; margin-bottom: 25px; text-align: center;"></p>
+        
+        <div style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: left; line-height: 1.8;">
+            <h3 class="gold-text">최종 통치 기록</h3>
+            <p>👑 군주 존함: <span id="go-name"></span></p>
+            <p>🏰 다스린 국가: <span id="go-country"></span></p>
+            <p>⏳ 생존 일수: <span id="go-days"></span>일 차</p>
+            <p>💰 최종 국고: <span id="go-gold"></span>g</p>
+            <p>⚔️ 최종 군사: <span id="go-military"></span></p>
+            <p>👥 최종 만족도: <span id="go-happiness"></span></p>
+        </div>
+        <button class="btn" onclick="restartGame()">새로운 기회로 가기</button>
+    </div>
+
+    <script>
+        // --- 전역 시스템 상태 관리 ---
+        let currentMode = 'register'; // 'register' or 'login'
+        let currentUser = null; // 현재 로그인된 유저 데이터 캡슐
+        
+        // 기본 초기 스탯 세팅값
+        const DEFAULT_STATE = {
+            day: 1,
+            phase: 'morning', // 'morning', 'lunch_ready', 'lunch', 'dinner_ready', 'dinner', 'night', 'sleep'
+            gold: 1000,
+            military: 100,
+            happiness: 80,
+            population: 10000,
+            hp: 100,
+            maxHp: 100,
+            officeCount: 10 // 매 타임당 업무 카운트다운
+        };
+
+        // 이미지 자산 맵핑 (앞서 제작한 실제 고화질 백그라운드 매칭용)
+        const BACKGROUNDS = {
+            start: "linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://image.notion.so/dummy1')", // 복도 대체
+            morning: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://raw.githubusercontent.com/FictionalPath/images/main/corridor.jpg')", // 궁전 복도
+            dining: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://raw.githubusercontent.com/FictionalPath/images/main/dining.jpg')", // 식당
+            office: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://raw.githubusercontent.com/FictionalPath/images/main/study.jpg')", // 집무실
+            night: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://raw.githubusercontent.com/FictionalPath/images/main/dungeon.jpg')", // 지하감옥/밤훈련
+            treasury: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://raw.githubusercontent.com/FictionalPath/images/main/treasury.jpg')", // 보물창고
+            garden: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://raw.githubusercontent.com/FictionalPath/images/main/garden.jpg')" // 정원
+        };
+
+        // --- 로그인 및 세션 관리 엔진 ---
+        function showAuthForm(mode) {
+            currentMode = mode;
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('auth-screen').classList.remove('hidden');
+            
+            const title = document.getElementById('auth-title');
+            const regFields = document.getElementById('register-fields');
+            const submitBtn = document.getElementById('auth-submit-btn');
+
+            if (mode === 'register') {
+                title.textContent = "군주 연대기 등록 서약서";
+                regFields.classList.remove('hidden');
+                submitBtn.textContent = "왕국 창설 및 등극";
+            } else {
+                title.textContent = "기존 국가 인장 봉인 해제";
+                regFields.classList.add('hidden');
+                submitBtn.textContent = "국정 이어하기";
+            }
+        }
+
+        function backToMain() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+        }
+
+        function handleAuthSubmit() {
+            const username = document.getElementById('auth-username').value.trim();
+            const password = document.getElementById('auth-password').value;
+
+            if(!username || !password) {
+                alert("존함과 옥새 암호를 정확하게 기입해주십시오.");
+                return;
+            }
+
+            if (currentMode === 'register') {
+                const countryInput = document.getElementById('reg-country').value.trim();
+                const gender = document.querySelector('input[name="reg-gender"]:checked').value;
+
+                if(!countryInput) {
+                    alert("건설할 나라 이름을 입력하십시오.");
+                    return;
+                }
+
+                const countryFullName = countryInput + " 왕국";
+
+                // 로컬 스토리지 중복 검사
+                if (localStorage.getItem(`user_${username}`)) {
+                    alert("이미 해당 존함으로 등록된 연대기가 존재합니다. 다른 이름을 사용하십시오.");
+                    return;
+                }
+
+                // 신규 유저 정보 가공
+                currentUser = {
+                    username: username,
+                    password: password,
+                    country: countryFullName,
+                    gender: gender,
+                    title: `${username} 전하`,
+                    gameState: JSON.parse(JSON.stringify(DEFAULT_STATE)) // 복사본 생성
+                };
+
+                saveUserData();
+                alert(`${countryFullName}의 탄생을 축하드립니다, ${currentUser.title}!`);
+                enterGame();
+
+            } else {
+                // 로그인 진행
+                const savedData = localStorage.getItem(`user_${username}`);
+                if (!savedData) {
+                    alert("존재하지 않는 군주 존함입니다.");
+                    return;
+                }
+
+                const parsedUser = JSON.parse(savedData);
+                if (parsedUser.password !== password) {
+                    alert("옥새 암호(비밀번호)가 일치하지 않습니다.");
+                    return;
+                }
+
+                currentUser = parsedUser;
+                alert(`다시 오신 것을 환영합니다, ${currentUser.title}!`);
+                enterGame();
+            }
+        }
+
+        function saveUserData() {
+            if (currentUser) {
+                localStorage.setItem(`user_${currentUser.username}`, JSON.stringify(currentUser));
+            }
+        }
+
+        // --- 게임 내부 로직 진입 ---
+        function enterGame() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            
+            // 타이틀 바 변경
+            document.getElementById('display-title').textContent = `${currentUser.country} | ${currentUser.title}`;
+            
+            updateUI();
+            startCurrentPhase();
+        }
+
+        function updateUI() {
+            const state = currentUser.gameState;
+            
+            // 기본 수치 업데이트
+            document.getElementById('stat-gold').textContent = state.gold + "g";
+            document.getElementById('stat-military').textContent = state.military;
+            document.getElementById('stat-happiness').textContent = `${state.happiness}% (${state.population}명)`;
+            document.getElementById('display-day').textContent = `제 ${state.day}일 차`;
+
+            // 타임라인 국정 페이즈 명칭 세팅
+            let phaseKOR = "아침";
+            if (state.phase.includes('lunch')) phaseKOR = "오전 집무 완료 (점심 식사)";
+            else if (state.phase.includes('dinner')) phaseKOR = "오후 집무 완료 (저녁 식사)";
+            else if (state.phase === 'office') phaseKOR = "업무 집무 시간";
+            else if (state.phase === 'night') phaseKOR = "야간 단련";
+            
+            document.getElementById('display-time').textContent = phaseKOR;
+
+            // 체력 바 업데이트
+            const hpPercent = (state.hp / state.maxHp) * 100;
+            document.getElementById('stat-hp-bar').style.width = `${Math.max(0, hpPercent)}%`;
+            document.getElementById('stat-hp-text').textContent = `체력 ${state.hp} / ${state.maxHp}`;
+
+            // 시스템 국정 상태 하락에 따른 민심 감쇄 보정 자동화
+            if (state.gold < 200 || state.military < 30) {
+                // 재정 또는 군사 위협 시 민심 상시 서서히 하락 유도
+                state.happiness = Math.max(0, state.happiness - 1);
+            }
+
+            // 실시간 패배 판정 감지
+            checkDefeatConditions();
+        }
+
+        // --- 루프 페이즈 스위칭 제어기 ---
+        function startCurrentPhase() {
+            const state = currentUser.gameState;
+            
+            // 모든 연출 창 숨김 초기화
+            document.getElementById('morning-phase').classList.add('hidden');
+            document.getElementById('meal-phase').classList.add('hidden');
+            document.getElementById('ready-phase').classList.add('hidden');
+            document.getElementById('office-phase').classList.add('hidden');
+            document.getElementById('night-phase').classList.add('hidden');
+            document.getElementById('next-action-container').classList.add('hidden');
+            document.getElementById('detail-panel').style.display = 'none';
+
+            if (state.phase === 'morning') {
+                // 아침: 러시안 룰렛
+                applyBackground('morning');
+                document.getElementById('narrative-desc').innerHTML = `🌅 <strong>새 아침이 밝았습니다, ${currentUser.title}.</strong><br>왕위에 앉은 자는 항상 의문사를 조심해야 합니다. 눈앞에 비치된 3정의 총 중 하나를 고르십시오. <strong>딱 한 군데에만 진짜 총알이 장전되어 있습니다.</strong>`;
+                document.getElementById('morning-phase').classList.remove('hidden');
+            } 
+            else if (state.phase === 'lunch_ready') {
+                applyBackground('dining');
+                document.getElementById('narrative-desc').innerHTML = `🔔 <strong>오전 집무가 끝났습니다.</strong><br>기력을 보충하기 위해 수라상 점심 식사를 들 시간입니다. 주방장들 중 독살범이 숨어있을 수 있습니다. <strong>3개의 요리 중 하나에는 맹독이 들어있습니다.</strong>`;
+                document.getElementById('meal-phase').classList.remove('hidden');
+            }
+            else if (state.phase === 'dinner_ready') {
+                applyBackground('dining');
+                document.getElementById('narrative-desc').innerHTML = `🔔 <strong>오후 집무를 모두 성공적으로 완수하셨습니다.</strong><br>이제 하루를 갈무리하는 만찬 저녁 식사 시간입니다. <strong>마찬가지로 3가지 음식 중 하나의 요리엔 치명적인 독이 주입되어 있습니다.</strong>`;
+                document.getElementById('meal-phase').classList.remove('hidden');
+            }
+            else if (state.phase === 'office') {
+                applyBackground('office');
+                document.getElementById('narrative-desc').innerHTML = `✍️ <strong>집무실 업무 개시</strong><br>책상 앞에 앉았습니다. 산적해 있는 10가지 국정 과제들을 선택해 신속히 집행하십시오. 매사 확률에 의한 결과가 따릅니다.`;
+                document.getElementById('office-phase').classList.remove('hidden');
+                document.getElementById('work-countdown').textContent = state.officeCount;
+            }
+            else if (state.phase === 'night') {
+                applyBackground('night');
+                document.getElementById('narrative-desc').innerHTML = `🕯️ <strong>어스름한 야간 시간이 되었습니다.</strong><br>침소에 들기 전, 독살 및 총격을 견뎌내기 위해 비전 단련서로 육체 체력을 한 차례 강화 연마할 수 있습니다.`;
+                document.getElementById('night-phase').classList.remove('hidden');
+            }
+        }
+
+        // --- 아침 러시안 룰렛 로직 ---
+        function triggerRussianRoulette(cardIndex) {
+            document.getElementById('morning-phase').classList.add('hidden');
+            const bulletIndex = Math.floor(Math.random() * 3); // 0, 1, 2 중 하나가 정답(실탄)
+            const state = currentUser.gameState;
+
+            if (cardIndex === bulletIndex) {
+                // 발사 성공 (피격)
+                flashBloodScreen();
+                const damage = 100; // 관통상 기본 데미지
+                state.hp = Math.max(0, state.hp - damage);
+                
+                document.getElementById('narrative-desc').innerHTML = `<span class="red-text">💥 타아앙!!!</span><br>탄환이 몸을 관통하는 고통이 엄습합니다! <span class="red-text">체력 100 소실!</span> 간신히 치명적인 충격을 버텨냈거나 눈앞이 가물거립니다.`;
+            } else {
+                // 불발 (회피)
+                document.getElementById('narrative-desc').innerHTML = `⚙️ <em>틱... 가벼운 쇳소리만 울립니다.</em><br>허공을 갈랐습니다. 신이 당신을 점지하셨군요. 이번 방아쇠에는 공이가 비어있었습니다. 무사히 침대를 벗어납니다.`;
+            }
+
+            saveUserData();
+            updateUI();
+            
+            // 즉사하지 않았다면 다음 진행 버튼 활성화
+            if (state.hp > 0) {
+                setupNextActionButton('오전 국정 집무실 입장');
+            }
+        }
+
+        // --- 점심 / 저녁 독 피하기 로직 ---
+        function triggerDining(cardIndex) {
+            document.getElementById('meal-phase').classList.add('hidden');
+            const poisonIndex = Math.floor(Math.random() * 3); // 3개 중 하나가 독약
+            const state = currentUser.gameState;
+
+            if (cardIndex === poisonIndex) {
+                // 독살 피해 입음
+                flashBloodScreen();
+                const damage = 50; 
+                state.hp = Math.max(0, state.hp - damage);
+                document.getElementById('narrative-desc').innerHTML = `<span class="red-text">🤢 으윽...!</span><br>음식이 목으로 넘어가자마자 가슴에 칼을 찌르는 듯한 강렬한 산독 통증이 터져 나옵니다! 독입니다! <span class="red-text">체력 50 소실.</span>`;
+            } else {
+                // 정상 식사
+                const heal = 30; // 30 회복
+                const oldHp = state.hp;
+                state.hp = Math.min(state.maxHp, state.hp + heal);
+                const actualHeal = state.hp - oldHp;
+                
+                document.getElementById('narrative-desc').innerHTML = `😋 <strong>냠냠... 아주 훌륭하고 만족스러운 수라상이었습니다.</strong><br>독약은 들어있지 않았습니다. 안전하게 포만감을 느끼며 기운을 되찾습니다. <span class="gold-text">체력 +${actualHeal} 회복!</span>`;
+            }
+
+            saveUserData();
+            updateUI();
+
+            if (state.hp > 0) {
+                if (state.phase === 'lunch_ready') {
+                    setupNextActionButton('오후 국정 집무실 입장');
+                } else {
+                    setupNextActionButton('야간 수련 단계로 이동');
+                }
+            }
+        }
+
+        // --- 집무실 1인칭 업무 세부 열기 시스템 ---
+        function openWorkDetail(category) {
+            const panel = document.getElementById('detail-panel');
+            const title = document.getElementById('detail-title');
+            const content = document.getElementById('detail-content');
+            const state = currentUser.gameState;
+
+            panel.style.display = 'block';
+
+            if (category === 'military') {
+                title.textContent = "⚔️ 왕실 무기고 군비 강화 정책";
+                content.innerHTML = `
+                    <p style="margin-bottom:10px; font-size:0.9rem;">재정을 투입해 왕실 상비군 장비를 확률 단련 강화합니다.</p>
+                    <p style="margin-bottom:15px; font-size:0.85rem; color:#aaa;">성공률: <strong class="gold-text">65%</strong><br>성공: 군사력 +15 증가<br>실패: 군사 장비 무기 유실로 군사력 -20 감소</p>
+                    <button class="btn" onclick="executeWork('military')">단련 집행하기</button>
+                `;
+            }
+            else if (category === 'finance') {
+      
